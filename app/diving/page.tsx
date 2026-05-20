@@ -4,7 +4,7 @@ import { divePackages } from "@/lib/data";
 import { Award, Users, Shield, Star, Check, ArrowRight } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "Diving | Binukbok Dive Academy (BIDA)",
+  title: "Diving | BiNuKBoK Dive Academy (BIDA)",
   description:
     "Experience world-class scuba diving certification and training in the pristine waters of Batangas.",
 };
@@ -29,7 +29,7 @@ export default function DivingPage() {
         </span>
         <div className="relative mx-auto max-w-3xl px-6">
           <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
-            BIDA · Binukbok Dive Academy
+            BIDA · BiNuKBoK Dive Academy
           </span>
           <h1 className="mt-4 text-4xl font-extrabold sm:text-5xl">
             Dive Into <span className="text-teal-bright">Adventure</span>

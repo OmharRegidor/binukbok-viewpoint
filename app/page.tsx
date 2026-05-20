@@ -27,52 +27,76 @@ export default function HomePage() {
   return (
     <>
       {/* ---------------- HERO ---------------- */}
-      <section className="hero-wash relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 pb-24 pt-16 text-center lg:px-8">
-          {/* taped polaroids */}
-          <div className="pointer-events-none absolute inset-0 hidden items-start justify-between px-10 pt-24 lg:flex">
-            <div className="-rotate-6 rounded-md bg-white p-2 shadow-xl">
-              <div className="placeholder h-40 w-56">Sunset Photo</div>
-            </div>
-            <div className="rotate-6 rounded-md bg-white p-2 shadow-xl">
-              <div className="placeholder h-40 w-56">Resort Photo</div>
-            </div>
+      <section className="hero-poster relative flex min-h-screen items-center justify-center overflow-hidden">
+        {/* darkening overlay: deepens the backdrop and lifts text contrast */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/35 via-black/25 to-black/40" />
+
+        {/* hero content */}
+        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center lg:px-8">
+          <Logo size={120} className="mx-auto mb-5 drop-shadow-2xl" />
+          <h1 className="text-4xl font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] md:text-6xl lg:text-7xl">
+            BiNuKBoK
+          </h1>
+          <p className="text-gradient-teal text-4xl font-bold leading-tight tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] md:text-6xl lg:text-7xl">
+            VieW PoiNT ReSoRT
+          </p>
+          <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-relaxed text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-lg">
+            Discover paradise in Bauan, Batangas. Experience breathtaking sunsets,
+            world-class diving, and authentic Filipino hospitality.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/book"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-coral px-8 text-lg font-semibold text-white shadow-lg transition-colors hover:bg-coral-dark"
+            >
+              Book Your Stay
+            </Link>
+            <Link
+              href="/diving"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-8 text-lg font-semibold text-navy shadow-lg transition-transform hover:-translate-y-0.5"
+            >
+              <Waves className="h-5 w-5 text-teal" />
+              Explore Diving
+            </Link>
           </div>
 
-          <div className="relative mx-auto max-w-2xl">
-            <Logo size={84} className="mx-auto mb-6 shadow-lg ring-4 ring-white/40" />
-            <h1 className="text-5xl font-extrabold leading-tight text-white sm:text-6xl">
-              Binukbok
-            </h1>
-            <p className="text-gradient-teal text-4xl font-extrabold sm:text-5xl">
-              View Point Resort
-            </p>
-            <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-white/90 sm:text-base">
-              Discover paradise in Bauan, Batangas. Experience breathtaking sunsets,
-              world-class diving, and authentic Filipino hospitality.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/book"
-                className="rounded-full bg-coral px-7 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-coral-dark"
-              >
-                Book Your Stay
-              </Link>
-              <Link
-                href="/diving"
-                className="flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-navy shadow-lg transition-transform hover:-translate-y-0.5"
-              >
-                <Waves className="h-4 w-4 text-teal" />
-                Explore Diving
-              </Link>
-            </div>
-            <ChevronDown className="mx-auto mt-12 h-6 w-6 animate-bounce text-white/80" />
-          </div>
+          {/* scroll-down indicator — kept in flow so it never overlaps the buttons */}
+          <a
+            href="#featured-experience"
+            aria-label="Scroll to featured experience"
+            className="mt-10 inline-flex"
+          >
+            <ChevronDown className="h-7 w-7 animate-bounce text-white/90 drop-shadow" />
+          </a>
+        </div>
+
+        {/* single translucent wave that gently undulates along the bottom */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5]">
+          <svg
+            className="hero-wave"
+            viewBox="0 0 1440 120"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path fill="#f3ead3" fillOpacity="0.3">
+              <animate
+                attributeName="d"
+                dur="8s"
+                repeatCount="indefinite"
+                calcMode="spline"
+                keyTimes="0;0.5;1"
+                keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                values="M0,64 C320,112 520,16 760,64 C1040,120 1200,24 1440,64 L1440,120 L0,120 Z;
+                        M0,64 C320,16 520,112 760,64 C1040,24 1200,120 1440,64 L1440,120 L0,120 Z;
+                        M0,64 C320,112 520,16 760,64 C1040,120 1200,24 1440,64 L1440,120 L0,120 Z"
+              />
+            </path>
+          </svg>
         </div>
       </section>
 
       {/* ---------------- SCUBA FEATURED ---------------- */}
-      <section className="bg-cream py-20">
+      <section id="featured-experience" className="scroll-mt-16 bg-cream py-20">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-2 lg:px-8">
           {/* left visual card */}
           <div className="relative">
@@ -114,7 +138,7 @@ export default function HomePage() {
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-navy/70">
               Experience the thrill of underwater exploration with our exclusive scuba
-              diving packages at <strong>BIDA – Binukbok Dive Academy</strong>. Perfect
+              diving packages at <strong>BIDA – BiNuKBoK Dive Academy</strong>. Perfect
               for adventurers of all skill levels, from first-time divers to those
               seeking advanced certifications.
             </p>
@@ -205,7 +229,7 @@ export default function HomePage() {
               What Our Guests Say
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
-              Join thousands of happy guests who made unforgettable memories at Binukbok
+              Join thousands of happy guests who made unforgettable memories at BiNuKBoK
             </p>
           </div>
 

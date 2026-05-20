@@ -5,7 +5,7 @@ import { rooms } from "@/lib/data";
 import { Users, Check, ArrowRight, Star } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "Accommodations | Binukbok View Point Resort",
+  title: "Accommodations | BiNuKBoK VieW PoiNT ReSoRT",
   description:
     "From romantic couple rooms to traditional kubos, discover your ideal beachfront accommodation.",
 };
@@ -126,7 +126,7 @@ export default function AccommodationsPage() {
         <div className="mx-auto max-w-2xl px-6">
           <h2 className="text-3xl font-extrabold">Ready to Book Your Stay?</h2>
           <p className="mt-3 text-sm text-white/70">
-            Secure your perfect accommodation at Binukbok View Point Resort
+            Secure your perfect accommodation at BiNuKBoK VieW PoiNT ReSoRT
           </p>
           <Link
             href="/book"

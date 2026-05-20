@@ -11,7 +11,7 @@ export function Footer() {
           <div className="mb-4 flex items-center gap-2.5">
             <Logo size={42} />
           </div>
-          <h3 className="mb-3 text-base font-bold text-white">Binukbok View Point</h3>
+          <h3 className="mb-3 text-base font-bold text-white">BiNuKBoK VieW PoiNT</h3>
           <p className="text-sm leading-relaxed text-white/60">
             Your ultimate beach destination in Bauan, Batangas. Experience diving,
             relaxation, and authentic Filipino hospitality.
@@ -72,7 +72,7 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <p className="mx-auto max-w-7xl px-6 py-6 text-center text-xs text-white/50 lg:px-8">
-          © 2026 Binukbok View Point Resort. All rights reserved.
+          © 2026 BiNuKBoK VieW PoiNT ReSoRT. All rights reserved.
         </p>
       </div>
     </footer>

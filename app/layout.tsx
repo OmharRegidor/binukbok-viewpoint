@@ -12,7 +12,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Binukbok View Point Resort | Bauan, Batangas",
+  title: "BiNuKBoK VieW PoiNT ReSoRT | Bauan, Batangas",
   description:
     "Discover paradise in Bauan, Batangas. Experience breathtaking sunsets, world-class diving, and authentic Filipino hospitality.",
 };

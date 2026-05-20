@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 const nav = [
@@ -14,25 +14,53 @@ const nav = [
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Toggle the solid bar once the page has scrolled past the top of the hero.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll(); // sync on mount (e.g. refresh while scrolled)
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Transparent over the dark hero at the top; solid white once scrolled or
+  // when the mobile menu is open (so its links stay readable).
+  const solid = scrolled || open;
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 shadow-sm backdrop-blur">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        solid ? "bg-white/95 shadow-sm backdrop-blur" : "bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5">
-          <Logo size={38} />
-          <span className="text-lg font-bold text-navy">Binukbok</span>
+          <Logo size={48} />
+          <span
+            className={`text-lg font-bold transition-colors ${
+              solid ? "text-navy" : "text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
+            }`}
+          >
+            BiNuKBoK
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
           {nav.map((item) => {
             const active = pathname === item.href;
+            const linkClass = solid
+              ? active
+                ? "text-teal"
+                : "text-navy/70 hover:text-teal"
+              : active
+                ? "text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
+                : "text-white/85 hover:text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]";
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-teal ${
-                  active ? "text-teal" : "text-navy/70"
-                }`}
+                className={`text-sm font-medium transition-colors ${linkClass}`}
               >
                 {item.label}
               </Link>
@@ -49,7 +77,9 @@ export function Header() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-md text-navy md:hidden"
+          className={`flex h-10 w-10 items-center justify-center rounded-md transition-colors md:hidden ${
+            solid ? "text-navy" : "text-white"
+          }`}
           aria-label="Toggle menu"
           aria-expanded={open}
         >

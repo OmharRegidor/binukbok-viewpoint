@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
 
 export const metadata: Metadata = {
-  title: "Book Your Stay | Binukbok View Point Resort",
-  description: "Reserve your room and diving experience at Binukbok View Point Resort.",
+  title: "Book Your Stay | BiNuKBoK VieW PoiNT ReSoRT",
+  description: "Reserve your room and diving experience at BiNuKBoK VieW PoiNT ReSoRT.",
 };
 
 export default function BookPage() {
@@ -17,7 +17,7 @@ export default function BookPage() {
           </span>
           <h1 className="mt-4 text-4xl font-extrabold sm:text-5xl">Book Your Stay</h1>
           <p className="mx-auto mt-4 max-w-lg text-sm text-white/80">
-            Reserve your room and diving experience at Binukbok View Point Resort
+            Reserve your room and diving experience at BiNuKBoK VieW PoiNT ReSoRT
           </p>
         </div>
       </section>

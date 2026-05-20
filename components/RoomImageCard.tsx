@@ -18,7 +18,7 @@ export function RoomImageCard({ room, compact = false }: Props) {
 
         {/* diagonal brand banner */}
         <div className="absolute left-0 top-3 flex w-full items-center justify-between bg-navy/85 px-3 py-1.5 text-[10px] font-semibold tracking-wide text-white">
-          <span className="opacity-90">BINUKBOK · VIEW POINT RESORT</span>
+          <span className="opacity-90">BiNuKBoK · VieW PoiNT ReSoRT</span>
           <span className="text-teal-bright">RESERVE YOUR SPOT NOW</span>
         </div>
 
