@@ -1,0 +1,96 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Logo } from "./Logo";
+
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/accommodations", label: "Accommodations" },
+  { href: "/diving", label: "Diving" },
+];
+
+export function Header() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 bg-white/95 shadow-sm backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Logo size={38} />
+          <span className="text-lg font-bold text-navy">Binukbok</span>
+        </Link>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {nav.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm font-medium transition-colors hover:text-teal ${
+                  active ? "text-teal" : "text-navy/70"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+          <Link
+            href="/book"
+            className="rounded-full bg-coral px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-coral-dark"
+          >
+            Book Now
+          </Link>
+        </nav>
+
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="flex h-10 w-10 items-center justify-center rounded-md text-navy md:hidden"
+          aria-label="Toggle menu"
+          aria-expanded={open}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            {open ? (
+              <>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </>
+            ) : (
+              <>
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </>
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {open && (
+        <nav className="border-t border-black/5 bg-white px-5 pb-4 pt-2 md:hidden">
+          {nav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="block py-2 text-sm font-medium text-navy/80"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/book"
+            onClick={() => setOpen(false)}
+            className="mt-2 block rounded-full bg-coral px-5 py-2 text-center text-sm font-semibold text-white"
+          >
+            Book Now
+          </Link>
+        </nav>
+      )}
+    </header>
+  );
+}
