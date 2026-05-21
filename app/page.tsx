@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Logo } from "@/components/Logo";
 import { RoomImageCard } from "@/components/RoomImageCard";
 import { rooms, testimonials, stats, contact } from "@/lib/data";
@@ -96,70 +97,70 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- SCUBA FEATURED ---------------- */}
-      <section id="featured-experience" className="scroll-mt-16 bg-cream py-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-2 lg:px-8">
-          {/* left visual card */}
-          <div className="relative">
-            <div className="rounded-2xl bg-teal-deep p-6 text-white shadow-xl">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="placeholder h-40 rounded-lg">Diver Photo</div>
-                <div className="space-y-3">
-                  <div className="placeholder h-[4.5rem] rounded-lg">Diver</div>
-                  <div className="placeholder h-[4.5rem] rounded-lg">Coral</div>
-                </div>
-              </div>
-              <h3 className="mt-5 text-3xl font-extrabold leading-none">
-                SCUBA<br />DIVING
-              </h3>
-              <p className="mt-3 text-sm text-white/85">
-                Experience the thrill of underwater exploration with our exclusive
-                scuba diving packages, perfect for adventurers of all skill levels.
-              </p>
-              <p className="mt-4 text-xs font-medium text-teal-bright">
-                @binukbokviewpoint
-              </p>
-            </div>
-            <div className="absolute -bottom-4 right-6 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 shadow-lg">
-              <Award className="h-5 w-5 text-teal" />
+      <section
+        id="featured-experience"
+        className="relative flex min-h-screen scroll-mt-16 items-center overflow-hidden bg-cream py-20"
+      >
+        {/* soft decorative circles */}
+        <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-teal/5" />
+        <div className="pointer-events-none absolute -bottom-28 -right-28 h-96 w-96 rounded-full bg-teal/10" />
+
+        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:px-8">
+          {/* left visual: scuba poster + BIDA badge sticking out */}
+          <div className="relative mx-auto w-full max-w-[584px]">
+            <Image
+              src="/images/scuba-diving.png"
+              alt="Scuba diving at BIDA — BiNuKBoK Dive Academy"
+              width={584}
+              height={584}
+              className="w-full rounded-3xl shadow-2xl"
+            />
+            <div className="absolute -bottom-6 -right-4 flex items-center gap-3 rounded-2xl bg-white px-6 py-4 shadow-xl">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-teal-deep text-white">
+                <Award className="h-7 w-7" />
+              </span>
               <div className="leading-tight">
-                <p className="text-sm font-bold text-navy">BIDA</p>
-                <p className="text-[10px] text-navy/60">Dive Academy</p>
+                <p className="text-2xl font-extrabold text-navy">BIDA</p>
+                <p className="whitespace-nowrap text-sm text-navy/60">Dive Academy</p>
               </div>
             </div>
           </div>
 
           {/* right text */}
           <div>
-            <span className="inline-block rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal">
+            <span className="mb-6 inline-block rounded-full bg-teal/10 px-4 py-1.5 text-sm font-semibold text-teal-deep">
               Featured Experience
             </span>
-            <h2 className="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">
-              Get Your Scuba <span className="text-teal">Diving</span> Certification
+            <h2 className="mb-6 text-3xl font-bold leading-tight text-navy md:text-5xl">
+              Get Your Scuba <span className="text-teal-deep">Diving Certification</span>
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-navy/70">
+            <p className="mb-8 text-lg leading-relaxed text-gray-700">
               Experience the thrill of underwater exploration with our exclusive scuba
-              diving packages at <strong>BIDA – BiNuKBoK Dive Academy</strong>. Perfect
-              for adventurers of all skill levels, from first-time divers to those
-              seeking advanced certifications.
+              diving packages at{" "}
+              <strong className="font-bold text-teal-deep">
+                BIDA – BiNuKBoK Dive Academy
+              </strong>
+              . Perfect for adventurers of all skill levels, from first-time divers to
+              those seeking advanced certifications.
             </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="mb-8 grid grid-cols-2 gap-4">
               {featuredPoints.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="flex items-start gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal/10 text-teal">
-                    <Icon className="h-5 w-5" />
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/10 text-teal-deep">
+                    <Icon className="h-6 w-6" />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold text-navy">{title}</p>
-                    <p className="text-xs text-navy/60">{text}</p>
+                    <p className="font-bold text-navy">{title}</p>
+                    <p className="text-sm text-gray-500">{text}</p>
                   </div>
                 </div>
               ))}
             </div>
             <Link
               href="/diving"
-              className="mt-7 inline-flex items-center gap-2 rounded-full bg-teal-deep px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal"
+              className="inline-flex items-center gap-2 rounded-full bg-teal-deep px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-teal"
             >
-              Explore Diving Programs <ArrowRight className="h-4 w-4" />
+              Explore Diving Programs <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
