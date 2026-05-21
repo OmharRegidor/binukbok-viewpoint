@@ -63,6 +63,8 @@ export function Footer() {
             </a>
             <a
               href="https://www.instagram.com/binukbokviewpoint/"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Instagram"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             >
