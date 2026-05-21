@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Logo } from "@/components/Logo";
-import { RoomImageCard } from "@/components/RoomImageCard";
 import { rooms, testimonials, stats, contact } from "@/lib/data";
 import {
   Award,
@@ -168,39 +167,56 @@ export default function HomePage() {
 
       {/* ---------------- ACCOMMODATIONS PREVIEW ---------------- */}
       <section className="bg-white py-20">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center">
-            <span className="inline-block rounded-full bg-coral/10 px-3 py-1 text-xs font-semibold text-coral">
+            <span className="mb-4 inline-block rounded-full bg-coral/10 px-4 py-1.5 text-sm font-semibold text-coral">
               Accommodations
             </span>
-            <h2 className="mt-4 text-3xl font-extrabold text-navy sm:text-4xl">
+            <h2 className="mb-4 text-3xl font-bold text-navy md:text-5xl">
               Find Your Perfect Stay
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-sm text-navy/60">
+            <p className="mx-auto max-w-2xl text-lg text-gray-700">
               From cozy couples retreats to family adventures, we have the perfect
               accommodation waiting for you.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {rooms.map((room) => (
-              <div key={room.slug}>
-                <RoomImageCard room={room} compact />
-                <div className="mt-4 px-1">
-                  <h3 className="text-base font-bold text-navy">{room.name}</h3>
-                  <p className="mt-1 text-xs leading-relaxed text-navy/60">
+              <div
+                key={room.slug}
+                className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-black/5 transition-shadow hover:shadow-xl"
+              >
+                {/* room visual + price badge */}
+                <div className="relative aspect-[7/6] w-full overflow-hidden">
+                  <Image
+                    src={`/images/${room.slug}.png`}
+                    alt={room.name}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover object-top"
+                  />
+                  <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-sm font-bold text-navy shadow-md">
+                    ₱{room.price.toLocaleString()}/night
+                  </span>
+                </div>
+
+                {/* card body */}
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="mb-2 text-xl font-bold text-navy">{room.name}</h3>
+                  <p className="mb-4 text-sm text-gray-600">
                     {room.description.split(".")[0]}.
                   </p>
-                  <div className="mt-3 flex items-center justify-between border-t border-black/5 pt-3">
-                    <span className="flex items-center gap-1.5 text-xs text-navy/60">
-                      <Users className="h-3.5 w-3.5" />
+                  <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                    <span className="flex items-center gap-1.5 text-sm text-gray-500">
+                      <Users className="h-4 w-4" />
                       {room.guests.replace("Up to ", "")}
                     </span>
                     <Link
                       href="/book"
-                      className="flex items-center gap-1 text-xs font-semibold text-teal hover:text-teal-deep"
+                      className="flex items-center gap-1 text-sm font-semibold text-teal hover:text-teal-deep"
                     >
-                      Book Now <ArrowRight className="h-3 w-3" />
+                      Book Now <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
                 </div>
