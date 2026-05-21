@@ -242,10 +242,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
           <div className="text-center">
             <span className="text-sm font-semibold text-teal-bright">Guest Reviews</span>
-            <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">
+            <h2 className="mb-4 mt-2 text-3xl font-bold md:text-5xl">
               What Our Guests Say
             </h2>
-            <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
+            <p className="mx-auto max-w-2xl text-lg text-white/70">
               Join thousands of happy guests who made unforgettable memories at BiNuKBoK
             </p>
           </div>
@@ -272,8 +272,8 @@ export default function HomePage() {
           <div className="mt-14 grid max-w-2xl gap-6 mx-auto grid-cols-3 text-center">
             {stats.map((s) => (
               <div key={s.label}>
-                <p className="text-3xl font-extrabold text-teal-bright">{s.value}</p>
-                <p className="mt-1 text-xs text-white/70">{s.label}</p>
+                <p className="text-3xl font-bold text-[#4FD1C5] md:text-4xl">{s.value}</p>
+                <p className="mt-1 text-sm text-white/70">{s.label}</p>
               </div>
             ))}
           </div>
