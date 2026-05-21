@@ -14,6 +14,7 @@ import {
   Quote,
   MapPin,
   Phone,
+  Calendar,
 } from "@/components/Icons";
 
 const featuredPoints = [
@@ -282,64 +283,64 @@ export default function HomePage() {
 
       {/* ---------------- FINAL CTA ---------------- */}
       <section className="bg-cream py-20">
-        <div className="mx-auto grid max-w-6xl items-stretch gap-8 px-6 lg:grid-cols-2 lg:px-8">
-          {/* phone mockup */}
-          <div className="relative rounded-2xl bg-cream-soft p-6">
-            <div className="mb-4 rounded-lg bg-white/70 p-4 text-xs leading-relaxed text-navy/70 shadow-sm">
-              <p className="mb-1 font-bold text-navy">GUEST REVIEW!</p>
-              <p className="line-clamp-4">{testimonials[0].quote}</p>
-              <p className="mt-2 font-semibold text-teal">{testimonials[0].name}</p>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid overflow-hidden rounded-3xl bg-white shadow-xl lg:grid-cols-2">
+            {/* guest review visual */}
+            <div className="relative aspect-square">
+              <Image
+                src="/images/guest-review.png"
+                alt="BiNuKBoK View Point Resort guest review"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
             </div>
-            <div className="placeholder h-56 w-full rounded-xl">Guest Photo</div>
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              <div className="placeholder h-14 rounded">Photo</div>
-              <div className="placeholder h-14 rounded">Photo</div>
-              <div className="placeholder h-14 rounded">Photo</div>
-            </div>
-          </div>
 
-          {/* CTA card */}
-          <div className="flex flex-col justify-center rounded-2xl bg-white p-8 shadow-lg">
-            <h2 className="text-3xl font-extrabold text-navy">
-              Ready to Experience Paradise?
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-navy/70">
-              Plan your 2026 getaway and explore the treasures of Bauan, Batangas. Book
-              now and create memories that last a lifetime.
-            </p>
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal/10 text-teal">
-                  <MapPin className="h-5 w-5" />
-                </span>
-                <div className="text-sm">
-                  <p className="font-semibold text-navy">Location</p>
-                  <p className="text-navy/60">Bauan, Batangas, Philippines</p>
+            {/* CTA content */}
+            <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
+              <h2 className="text-3xl font-bold text-navy md:text-4xl">
+                Ready to Experience Paradise?
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-gray-700">
+                Plan your 2026 getaway and explore the treasures of Bauan, Batangas. Book
+                now and create memories that last a lifetime.
+              </p>
+              <div className="mt-8 space-y-4">
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/10 text-teal">
+                    <MapPin className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-navy">Location</p>
+                    <p className="text-gray-600">Bauan, Batangas, Philippines</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-coral/10 text-coral">
+                    <Phone className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-navy">Contact Us</p>
+                    <p className="text-gray-600">{contact.phone}</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-coral/10 text-coral">
-                  <Phone className="h-5 w-5" />
-                </span>
-                <div className="text-sm">
-                  <p className="font-semibold text-navy">Contact Us</p>
-                  <p className="text-navy/60">{contact.phone}</p>
-                </div>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/book"
+                  className="inline-flex items-center gap-2 rounded-full bg-coral px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-coral-dark"
+                >
+                  <Calendar className="h-5 w-5" /> Book Now
+                </Link>
+                <a
+                  href="https://www.facebook.com/binukbok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border-2 border-navy/20 px-7 py-3.5 text-base font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
+                >
+                  Visit Facebook
+                </a>
               </div>
-            </div>
-            <div className="mt-7 flex flex-wrap gap-4">
-              <Link
-                href="/book"
-                className="rounded-full bg-coral px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-coral-dark"
-              >
-                Book Now
-              </Link>
-              <a
-                href="#"
-                className="rounded-full border border-navy/20 px-7 py-3 text-sm font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
-              >
-                Visit Facebook
-              </a>
             </div>
           </div>
         </div>

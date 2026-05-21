@@ -53,14 +53,16 @@ export function Footer() {
           </p>
           <div className="flex gap-3">
             <a
-              href="#"
+              href="https://www.facebook.com/binukbok"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Facebook"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             >
               <Facebook className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/binukbokviewpoint/"
               aria-label="Instagram"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             >
