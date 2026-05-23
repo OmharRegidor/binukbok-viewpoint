@@ -1,0 +1,185 @@
+// Prisma schema for BiNuKBoK VieW PoiNT ReSoRT
+// Data model from docs/SYSTEM-DESIGN.md (validated v2).
+//
+// Connection: DATABASE_URL = Supabase pooled (Supavisor :6543) for the app at runtime.
+//             DIRECT_URL   = Supabase direct (:5432) used ONLY by `prisma migrate`.
+//
+// Columns are mapped to snake_case (@map) so raw SQL and the Supabase Table Editor
+// stay clean; the Prisma Client API remains camelCase in TypeScript.
+//
+// NOTE: the no-double-booking EXCLUDE constraint is NOT expressible in Prisma schema
+// (Prisma issue #17514). It ships as a raw-SQL migration — see prisma/README.md.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum RoomUnitStatus {
+  ACTIVE
+  MAINTENANCE
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  PAYMENT_REVIEW
+  CONFIRMED
+  CHECKED_IN
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentKind {
+  DEPOSIT
+  BALANCE
+}
+
+enum PaymentMethod {
+  GCASH
+  CASH
+}
+
+enum PaymentStatus {
+  SUBMITTED
+  VERIFIED
+  REJECTED
+}
+
+/// Room catalog + pricing (e.g. Couple Room). Maps from lib/data.ts `rooms`.
+model RoomType {
+  id                String     @id @default(uuid()) @db.Uuid
+  slug              String     @unique
+  name              String
+  tagline           String
+  badge             String
+  description       String
+  basePricePerNight Int        @map("base_price_per_night") // PHP, per night
+  maxGuests         Int        @map("max_guests") // parsed from "Up to N guests"
+  features          Json // string[] for now
+  createdAt         DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  units             RoomUnit[]
+
+  @@map("room_types")
+}
+
+/// Physical bookable units of a room type (e.g. "Couple Room A"). Availability lives here.
+model RoomUnit {
+  id         String         @id @default(uuid()) @db.Uuid
+  roomType   RoomType       @relation(fields: [roomTypeId], references: [id])
+  roomTypeId String         @map("room_type_id") @db.Uuid
+  label      String
+  status     RoomUnitStatus @default(ACTIVE)
+  bookings   Booking[]
+
+  @@map("room_units")
+}
+
+/// A guest who places bookings. Separate table enables repeat-guest history.
+model Guest {
+  id        String    @id @default(uuid()) @db.Uuid
+  fullName  String    @map("full_name")
+  email     String    @unique
+  phone     String
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  bookings  Booking[]
+
+  @@map("guests")
+}
+
+/// A reservation of one physical unit for a half-open date range [checkIn, checkOut).
+model Booking {
+  id               String        @id @default(uuid()) @db.Uuid
+  roomUnit         RoomUnit      @relation(fields: [roomUnitId], references: [id])
+  roomUnitId       String        @map("room_unit_id") @db.Uuid
+  guest            Guest         @relation(fields: [guestId], references: [id])
+  guestId          String        @map("guest_id") @db.Uuid
+  checkIn          DateTime      @map("check_in") @db.Date
+  checkOut         DateTime      @map("check_out") @db.Date
+  nights           Int // server-computed
+  roomSubtotal     Int           @map("room_subtotal")
+  diveSubtotal     Int           @default(0) @map("dive_subtotal")
+  totalPrice       Int           @map("total_price")
+  depositAmount    Int           @map("deposit_amount") // ₱500 fixed (v2)
+  status           BookingStatus @default(PENDING_PAYMENT)
+  confirmationCode String        @unique @map("confirmation_code") // short, human-readable; QR payload (check-in is admin-gated)
+  viewToken        String?       @unique @map("view_token") // high-entropy; ONLY in the public /b/[token] URL. Null = no public link / revoked.
+  specialRequests  String?       @map("special_requests") // untrusted; max 500; delimited before LLM
+  holdExpiresAt    DateTime?     @map("hold_expires_at") @db.Timestamptz // LEAST(createdAt+24h, checkIn-buffer)
+  checkedInAt      DateTime?     @map("checked_in_at") @db.Timestamptz
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  diveAddons BookingDiveAddon[]
+  payments   Payment[]
+  events     BookingEvent[]
+
+  @@index([roomUnitId, checkIn, checkOut]) // availability lookups
+  @@index([status])
+  @@map("bookings")
+}
+
+/// Diving experiences catalog (e.g. Discovery Dive). Maps from lib/data.ts `divePackages`.
+model DivePackage {
+  id      String             @id @default(uuid()) @db.Uuid
+  slug    String             @unique
+  name    String
+  tagline String
+  price   Int
+  unit    String // "Half Day", "Per Dive"...
+  popular Boolean            @default(false)
+  addons  BookingDiveAddon[]
+
+  @@map("dive_packages")
+}
+
+/// A diving experience added to a room booking (v1: add-on only, no dive-only bookings).
+model BookingDiveAddon {
+  id             String      @id @default(uuid()) @db.Uuid
+  booking        Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId      String      @map("booking_id") @db.Uuid
+  divePackage    DivePackage @relation(fields: [divePackageId], references: [id])
+  divePackageId  String      @map("dive_package_id") @db.Uuid
+  participants   Int         @default(1)
+  preferredDate  DateTime?   @map("preferred_date") @db.Date // coordinate on arrival if null
+  priceAtBooking Int         @map("price_at_booking") // snapshot of price at time of booking
+
+  @@map("booking_dive_addons")
+}
+
+/// Payments against a booking. v1: manual GCash deposit; balance settled on arrival.
+model Payment {
+  id          String        @id @default(uuid()) @db.Uuid
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  bookingId   String        @map("booking_id") @db.Uuid
+  kind        PaymentKind
+  method      PaymentMethod
+  amount      Int
+  referenceNo String?       @map("reference_no") // GCash reference #
+  proofUrl    String?       @map("proof_url") // screenshot (v1)
+  status      PaymentStatus @default(SUBMITTED)
+  verifiedBy  String?       @map("verified_by") // Clerk user id of the admin who verified
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  verifiedAt  DateTime?     @map("verified_at") @db.Timestamptz
+
+  @@map("payments")
+}
+
+/// Audit trail of every booking status change (who/when).
+model BookingEvent {
+  id         String         @id @default(uuid()) @db.Uuid
+  booking    Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId  String         @map("booking_id") @db.Uuid
+  fromStatus BookingStatus? @map("from_status")
+  toStatus   BookingStatus  @map("to_status")
+  actor      String // "guest" | "admin:<clerk_id>" | "system"
+  note       String?
+  createdAt  DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("booking_events")
+}

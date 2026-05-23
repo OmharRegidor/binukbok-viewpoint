@@ -22,6 +22,14 @@ yarn-error.log*
 
 # env files
 .env*
+!.env.example
+
+# stray non-pnpm lockfiles (this project uses pnpm)
+package-lock.json
+yarn.lock
+
+# playwright mcp output (screenshots, snapshots, console logs)
+.playwright-mcp/
 
 # typescript
 *.tsbuildinfo
