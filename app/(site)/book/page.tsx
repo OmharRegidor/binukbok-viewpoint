@@ -1,15 +1,28 @@
 import type { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
+import { getDivePackages, getRoomTypes } from "@/lib/db/catalog";
 
 export const metadata: Metadata = {
   title: "Book Your Stay | BiNuKBoK VieW PoiNT ReSoRT",
   description: "Reserve your room and diving experience at BiNuKBoK VieW PoiNT ReSoRT.",
 };
 
-export default function BookPage() {
+export default async function BookPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ dive?: string }>;
+}) {
+  const [{ dive }, roomTypes, divePackages] = await Promise.all([
+    searchParams,
+    getRoomTypes(),
+    getDivePackages(),
+  ]);
+
+  // "/book?dive=open-water-certification" pre-selects that course.
+  const initialDivePackageId = dive ? divePackages.find((d) => d.slug === dive)?.id : undefined;
+
   return (
     <>
-      {/* hero */}
       <section className="bg-gradient-to-b from-navy to-teal-deep py-20 text-center text-white">
         <div className="mx-auto max-w-3xl px-6">
           <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
@@ -22,10 +35,13 @@ export default function BookPage() {
         </div>
       </section>
 
-      {/* form */}
       <section className="bg-cream py-16">
         <div className="mx-auto max-w-5xl px-6 lg:px-8">
-          <BookingForm />
+          <BookingForm
+            roomTypes={roomTypes}
+            divePackages={divePackages}
+            initialDivePackageId={initialDivePackageId}
+          />
         </div>
       </section>
     </>
