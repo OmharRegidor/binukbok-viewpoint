@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getAdmin, requireAdmin } from "@/lib/auth";
-import { markArrived, verifyDeposit } from "@/lib/db/admin";
+import { markArrived, markCompleted, verifyDeposit } from "@/lib/db/admin";
 
 // Build a redirect path that stays clean on the admin subdomain (no "/admin"
 // prefix there) but still works at localhost/admin during development.
@@ -39,16 +39,27 @@ export async function signOutAction() {
   redirect(await adminPath("/login"));
 }
 
-export async function verifyDepositAction(formData: FormData) {
-  const admin = await requireAdmin(); // re-check on the handler itself (not just middleware)
-  const id = String(formData.get("bookingId") ?? "");
-  if (id) await verifyDeposit(id, admin.id);
-  revalidatePath("/admin");
-}
+export type RowState = { ok: boolean; message?: string } | null;
 
-export async function markArrivedAction(formData: FormData) {
+// re-check admin on the handler itself (not just middleware), then run the mutation
+async function runBookingAction(
+  formData: FormData,
+  fn: (id: string, actorId: string) => Promise<{ ok: boolean; message?: string }>,
+): Promise<RowState> {
   const admin = await requireAdmin();
   const id = String(formData.get("bookingId") ?? "");
-  if (id) await markArrived(id, admin.id);
-  revalidatePath("/admin");
+  if (!id) return { ok: false, message: "Missing booking." };
+  const res = await fn(id, admin.id);
+  if (res.ok) revalidatePath("/admin");
+  return res;
+}
+
+export async function verifyDepositAction(_prev: RowState, formData: FormData): Promise<RowState> {
+  return runBookingAction(formData, verifyDeposit);
+}
+export async function markArrivedAction(_prev: RowState, formData: FormData): Promise<RowState> {
+  return runBookingAction(formData, markArrived);
+}
+export async function markCompletedAction(_prev: RowState, formData: FormData): Promise<RowState> {
+  return runBookingAction(formData, markCompleted);
 }
