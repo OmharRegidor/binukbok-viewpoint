@@ -2,9 +2,18 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getAdmin, requireAdmin } from "@/lib/auth";
 import { markArrived, verifyDeposit } from "@/lib/db/admin";
+
+// Build a redirect path that stays clean on the admin subdomain (no "/admin"
+// prefix there) but still works at localhost/admin during development.
+async function adminPath(sub: "" | "/login"): Promise<string> {
+  const host = ((await headers()).get("host") ?? "").split(":")[0].toLowerCase();
+  const onAdmin = host.startsWith("admin.") || host === process.env.ADMIN_HOST?.toLowerCase();
+  return onAdmin ? sub || "/" : `/admin${sub}`;
+}
 
 export async function signInAction(_prev: { error: string }, formData: FormData): Promise<{ error: string }> {
   const email = String(formData.get("email") ?? "").trim();
@@ -21,13 +30,13 @@ export async function signInAction(_prev: { error: string }, formData: FormData)
     await supabase.auth.signOut();
     return { error: "This account doesn't have admin access." };
   }
-  redirect("/admin");
+  redirect(await adminPath(""));
 }
 
 export async function signOutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/admin/login");
+  redirect(await adminPath("/login"));
 }
 
 export async function verifyDepositAction(formData: FormData) {

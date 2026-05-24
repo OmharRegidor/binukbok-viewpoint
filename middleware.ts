@@ -24,8 +24,15 @@ export async function middleware(request: NextRequest) {
   const local = isLocalHost(host);
   const path = request.nextUrl.pathname;
 
-  // The public domain must not expose /admin in production.
-  if (!adminHost && path.startsWith("/admin") && !local) {
+  // Admin is reachable only via the admin subdomain. In local dev, redirect
+  // localhost/admin/* → admin.localhost/* ; in production, hide it entirely (404).
+  if (!adminHost && path.startsWith("/admin")) {
+    if (local) {
+      const target = new URL(request.url);
+      target.host = `admin.${target.host}`;
+      target.pathname = path.replace(/^\/admin/, "") || "/";
+      return NextResponse.redirect(target);
+    }
     return new NextResponse("Not Found", { status: 404 });
   }
 
