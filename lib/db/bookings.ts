@@ -13,8 +13,14 @@ const RELEASED_STATES: BookingStatus[] = [BookingStatus.CANCELLED, BookingStatus
 
 // "Today" as a UTC-midnight Date, computed in Asia/Manila (UTC+8, no DST).
 function manilaToday(): Date {
-  const m = new Date(Date.now() + 8 * 60 * 60 * 1000);
-  return new Date(Date.UTC(m.getUTCFullYear(), m.getUTCMonth(), m.getUTCDate()));
+  // Calendar date in Asia/Manila, as a UTC-midnight Date for DATE-column comparison.
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date()); // "YYYY-MM-DD"
+  return new Date(`${parts}T00:00:00.000Z`);
 }
 
 function isOverlapError(e: unknown): boolean {
