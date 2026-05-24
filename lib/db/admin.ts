@@ -88,3 +88,51 @@ export async function markArrivedByCode(code: string, actorId: string): Promise<
   if (!b) return { ok: false, message: "No booking found for that code." };
   return markArrived(b.id, actorId);
 }
+
+// Find a booking by guest name, confirmation code, phone, or email (for phone inquiries).
+export async function searchBookings(q: string) {
+  const term = q.trim();
+  if (term.length < 2) return [];
+  return prisma.booking.findMany({
+    where: {
+      OR: [
+        { confirmationCode: { contains: term, mode: "insensitive" } },
+        { guest: { fullName: { contains: term, mode: "insensitive" } } },
+        { guest: { email: { contains: term, mode: "insensitive" } } },
+        { guest: { phone: { contains: term } } },
+      ],
+    },
+    orderBy: { checkIn: "desc" },
+    take: 25,
+    select: LIST_SELECT,
+  });
+}
+
+// Check out a guest → COMPLETED. Idempotent; only valid from CHECKED_IN.
+export async function markCompleted(bookingId: string, actorId: string): Promise<AdminActionResult> {
+  const b = await prisma.booking.findUnique({ where: { id: bookingId }, select: { status: true } });
+  if (!b) return { ok: false, message: "Booking not found." };
+  if (b.status === BookingStatus.COMPLETED) return { ok: true };
+  if (b.status !== BookingStatus.CHECKED_IN) {
+    return { ok: false, message: `Only checked-in guests can be checked out (this one is ${b.status.toLowerCase()}).` };
+  }
+  await prisma.$transaction(async (tx) => {
+    await tx.booking.update({ where: { id: bookingId }, data: { status: BookingStatus.COMPLETED } });
+    await tx.bookingEvent.create({
+      data: { bookingId, fromStatus: BookingStatus.CHECKED_IN, toStatus: BookingStatus.COMPLETED, actor: `admin:${actorId}` },
+    });
+  });
+  return { ok: true };
+}
+
+// At-a-glance counts for the Today KPI strip.
+export async function getDashboardCounts() {
+  const today = manilaToday();
+  const next = new Date(today.getTime() + DAY_MS);
+  const [arrivalsToday, awaitingDeposit, inHouse] = await Promise.all([
+    prisma.booking.count({ where: { status: { in: [BookingStatus.CONFIRMED, BookingStatus.CHECKED_IN] }, checkIn: { gte: today, lt: next } } }),
+    prisma.booking.count({ where: { status: { in: [BookingStatus.PENDING_PAYMENT, BookingStatus.PAYMENT_REVIEW] } } }),
+    prisma.booking.count({ where: { status: BookingStatus.CHECKED_IN } }),
+  ]);
+  return { arrivalsToday, awaitingDeposit, inHouse };
+}
