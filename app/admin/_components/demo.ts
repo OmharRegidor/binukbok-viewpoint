@@ -29,3 +29,7 @@ export const DEMO_PENDING: PendingAction[] = [
   { title: "12 unpaid balances", subtitle: "Due today: ₱42,000", kind: "invoice" },
   { title: "Kubo 2 repair", subtitle: "Aircon malfunction reported", kind: "repair" },
 ];
+
+// Bookings page KPIs (mock — same reasons as above).
+export const DEMO_REVENUE_FORECAST_WEEKLY = { amountPhp: 142_800, note: "On track for Q4 goal" };
+export const DEMO_ARRIVALS_DELTA_PCT = 12; // "+N% from yesterday"

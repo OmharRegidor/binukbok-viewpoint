@@ -7,7 +7,7 @@ import { Anchor, GlassWater, Home, Receipt, Waves, Wrench } from "@/components/I
 import { StatusPill } from "./ui";
 import type { FacilityState, PendingAction } from "./demo";
 
-// ---------- KPI stat card (occupancy / revenue) ----------
+// ---------- KPI stat card (occupancy / revenue / forecast) ----------
 export function StatCard({
   label,
   value,
@@ -16,6 +16,7 @@ export function StatCard({
   icon,
   progress,
   footer,
+  dark,
 }: {
   label: string;
   value: string;
@@ -24,18 +25,23 @@ export function StatCard({
   icon: React.ReactNode;
   progress?: number; // 0-100, renders a bar pinned to the bottom
   footer?: React.ReactNode;
+  dark?: boolean; // dark navy accent card (e.g. Revenue Forecast)
 }) {
   return (
-    <div className="flex flex-col rounded-2xl bg-white p-6 ring-1 ring-navy/5">
+    <div className={`flex flex-col rounded-2xl p-6 ring-1 ${dark ? "bg-navy text-white ring-navy" : "bg-white text-navy ring-navy/5"}`}>
       <div className="flex items-center justify-between">
-        <p className="text-[15px] font-bold text-navy">{label}</p>
-        <span className="text-navy/40">{icon}</span>
+        <p className={`text-[15px] font-bold ${dark ? "text-white/90" : "text-navy"}`}>{label}</p>
+        <span className={dark ? "text-white/45" : "text-navy/40"}>{icon}</span>
       </div>
 
       <div className="mt-3 flex items-end gap-2">
-        <p className="text-4xl font-extrabold leading-none text-navy">{value}</p>
+        <p className={`text-4xl font-extrabold leading-none ${dark ? "text-white" : "text-navy"}`}>{value}</p>
         {accent && (
-          <span className={`pb-0.5 text-[14px] font-bold ${accentTone === "green" ? "text-green-600" : "text-teal-deep"}`}>
+          <span
+            className={`pb-0.5 text-[14px] font-bold ${
+              dark ? "text-teal-bright" : accentTone === "green" ? "text-green-600" : "text-teal-deep"
+            }`}
+          >
             {accent}
           </span>
         )}
@@ -43,12 +49,12 @@ export function StatCard({
 
       {typeof progress === "number" && (
         <div className="mt-auto pt-6">
-          <div className="h-2 w-full overflow-hidden rounded-full bg-navy/10">
+          <div className={`h-2 w-full overflow-hidden rounded-full ${dark ? "bg-white/20" : "bg-navy/10"}`}>
             <div className="h-full rounded-full bg-teal" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} />
           </div>
         </div>
       )}
-      {footer && <div className="mt-auto pt-5 text-[14px] text-navy/65">{footer}</div>}
+      {footer && <div className={`mt-auto pt-5 text-[14px] ${dark ? "text-white/80" : "text-navy/65"}`}>{footer}</div>}
     </div>
   );
 }
