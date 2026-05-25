@@ -1,22 +1,10 @@
 import { BookingStatus, Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
+import { DAY_MS, manilaToday } from "./dates";
 
 // Admin-side reads + mutations. These are auth-AGNOSTIC: the caller (a Clerk-gated
 // Server Action) is responsible for verifying the admin before invoking them.
 // `actorId` is recorded in the audit trail (booking_events.actor).
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function manilaToday(): Date {
-  // Calendar date in Asia/Manila, as a UTC-midnight Date for DATE-column comparison.
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Manila",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date()); // "YYYY-MM-DD"
-  return new Date(`${parts}T00:00:00.000Z`);
-}
 
 const LIST_SELECT = {
   id: true,

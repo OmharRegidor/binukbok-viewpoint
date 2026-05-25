@@ -1,24 +1,62 @@
-import { Calendar as CalendarIcon } from "@/components/Icons";
+import { getCalendarMonth, getPendingCheckIns, getTodayStats } from "@/lib/db/calendar";
+import { manilaToday } from "@/lib/db/dates";
 import { Topbar } from "../../_components/Topbar";
+import {
+  CalendarGrid,
+  DailySummaryButton,
+  MonthNav,
+  PendingCheckIns,
+  QuickBookingButton,
+  QuickResortView,
+  RoomStatusCard,
+  TodayActivity,
+} from "../../_components/calendar-ui";
 
 export const dynamic = "force-dynamic";
 
-export default function CalendarPage() {
+export default async function CalendarPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string | string[] }>;
+}) {
+  const sp = await searchParams;
+  // A duplicated ?month= arrives as an array — take the first; getCalendarMonth
+  // validates the value and falls back to the current month if it's malformed.
+  const monthParam = Array.isArray(sp.month) ? sp.month[0] : sp.month;
+
+  // Compute "today" once so every card on the page agrees, even across a midnight tick.
+  const today = manilaToday();
+  const [month, stats, pending] = await Promise.all([
+    getCalendarMonth(monthParam, today),
+    getTodayStats(today),
+    getPendingCheckIns(today),
+  ]);
+
   return (
     <>
       <Topbar title="Calendar" />
-      <div className="mx-auto max-w-4xl px-5 py-6 sm:px-8 sm:py-8">
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center ring-1 ring-navy/5">
-          <span className="grid h-16 w-16 place-items-center rounded-2xl bg-teal/10 text-teal-deep">
-            <CalendarIcon className="h-8 w-8" />
-          </span>
-          <h2 className="mt-5 text-2xl font-extrabold text-navy">Availability calendar</h2>
-          <p className="mt-2 max-w-md text-[15px] text-navy/65">
-            A month-by-month view of room availability and arrivals will live here. For now, use Bookings to find and manage reservations.
-          </p>
-          <span className="mt-5 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-900">
-            Coming soon
-          </span>
+
+      <div className="px-5 py-6 sm:px-8 sm:py-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Calendar + pending check-ins */}
+          <div className="space-y-6 lg:col-span-2">
+            <section className="rounded-2xl bg-white p-6 ring-1 ring-navy/5">
+              <MonthNav month={month} />
+              <CalendarGrid month={month} />
+            </section>
+
+            <PendingCheckIns rows={pending} />
+          </div>
+
+          {/* Sidebar — monitoring data first, actions lower (admins open this to scan,
+              not to book). */}
+          <aside className="space-y-6">
+            <TodayActivity stats={stats} />
+            <RoomStatusCard stats={stats} />
+            <QuickResortView occupancyPct={stats.occupancyPct} />
+            <QuickBookingButton />
+            <DailySummaryButton />
+          </aside>
         </div>
       </div>
     </>
