@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import { Calendar, ClipboardList, LayoutGrid, Settings, Sparkles, Users } from "@/components/Icons";
+import { Calendar, ClipboardList, LayoutGrid, ScanLine, Settings, Sparkles, Users } from "@/components/Icons";
 
 export type NavItem = {
   href: string;
@@ -12,6 +12,7 @@ export type NavItem = {
 export const ADMIN_NAV: NavItem[] = [
   { href: "/admin", norm: "/", label: "Overview", Icon: LayoutGrid },
   { href: "/admin/bookings", norm: "/bookings", label: "Bookings", Icon: ClipboardList },
+  { href: "/admin/scan", norm: "/scan", label: "Check-in", Icon: ScanLine },
   { href: "/admin/ai", norm: "/ai", label: "AI Assistant", Icon: Sparkles },
   { href: "/admin/calendar", norm: "/calendar", label: "Calendar", Icon: Calendar },
   { href: "/admin/resort-config", norm: "/resort-config", label: "Resort Config", Icon: Settings },
