@@ -50,7 +50,7 @@ async function runBookingAction(
   const id = String(formData.get("bookingId") ?? "");
   if (!id) return { ok: false, message: "Missing booking." };
   const res = await fn(id, admin.id);
-  if (res.ok) revalidatePath("/admin");
+  if (res.ok) revalidatePath("/admin", "layout"); // refresh Overview + Bookings lists
   return res;
 }
 
@@ -62,4 +62,20 @@ export async function markArrivedAction(_prev: RowState, formData: FormData): Pr
 }
 export async function markCompletedAction(_prev: RowState, formData: FormData): Promise<RowState> {
   return runBookingAction(formData, markCompleted);
+}
+
+export type PasswordState = { ok: boolean; message: string } | null;
+
+// Change the signed-in admin's own Supabase password.
+export async function changePasswordAction(_prev: PasswordState, formData: FormData): Promise<PasswordState> {
+  await requireAdmin();
+  const password = String(formData.get("password") ?? "");
+  const confirm = String(formData.get("confirm") ?? "");
+  if (password.length < 8) return { ok: false, message: "Password must be at least 8 characters." };
+  if (password !== confirm) return { ok: false, message: "The two passwords don't match." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { ok: false, message: error.message || "Couldn't update password." };
+  return { ok: true, message: "Password updated." };
 }

@@ -1,21 +1,22 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// Find a booking by name / code / phone. Routes use subdomain-clean paths
-// ("/", "/?q=") — middleware rewrites them onto /admin.
+// Find a booking by name / code / phone. Updates ?q= on the CURRENT page
+// (works on /bookings and /admin/bookings alike) — middleware handles the rewrite.
 export function BookingSearch() {
   const router = useRouter();
+  const pathname = usePathname();
   const params = useSearchParams();
   const [q, setQ] = useState(params.get("q") ?? "");
 
   useEffect(() => {
     const t = setTimeout(() => {
-      router.replace(q.trim() ? `/?q=${encodeURIComponent(q.trim())}` : "/");
+      router.replace(q.trim() ? `${pathname}?q=${encodeURIComponent(q.trim())}` : pathname);
     }, 300);
     return () => clearTimeout(t);
-  }, [q, router]);
+  }, [q, pathname, router]);
 
   return (
     <input
