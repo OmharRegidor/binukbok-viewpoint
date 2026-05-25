@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { createClient } from "./supabase/server";
 
 // The owner's email(s), comma-separated in ADMIN_EMAILS. Only these accounts
@@ -25,9 +24,9 @@ export async function getAdmin() {
 export async function requireAdmin() {
   const user = await getAdmin();
   if (!user) {
-    const host = ((await headers()).get("host") ?? "").split(":")[0].toLowerCase();
-    const onAdmin = host.startsWith("admin.") || host === process.env.ADMIN_HOST?.toLowerCase();
-    redirect(onAdmin ? "/login" : "/admin/login");
+    // Redirect to the REAL route (not the clean "/login") so it also resolves under
+    // client soft-navigation — see app/admin/actions.ts adminPath() note.
+    redirect("/admin/login");
   }
   return user;
 }

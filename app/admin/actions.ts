@@ -2,17 +2,17 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getAdmin, requireAdmin } from "@/lib/auth";
 import { markArrived, markCompleted, verifyDeposit } from "@/lib/db/admin";
 
-// Build a redirect path that stays clean on the admin subdomain (no "/admin"
-// prefix there) but still works at localhost/admin during development.
-async function adminPath(sub: "" | "/login"): Promise<string> {
-  const host = ((await headers()).get("host") ?? "").split(":")[0].toLowerCase();
-  const onAdmin = host.startsWith("admin.") || host === process.env.ADMIN_HOST?.toLowerCase();
-  return onAdmin ? sub || "/" : `/admin${sub}`;
+// Redirect to the REAL /admin routes — NOT the clean subdomain paths ("/", "/login").
+// Clean paths only resolve via middleware REWRITE, which applies to full-document
+// (hard) requests but NOT to the client navigation that follows a Server Action
+// redirect(). Redirecting to "/" rendered the public home and "/login" 404'd until a
+// manual refresh; the real routes resolve correctly under both soft and hard nav.
+function adminPath(sub: "" | "/login"): string {
+  return `/admin${sub}`;
 }
 
 export async function signInAction(_prev: { error: string }, formData: FormData): Promise<{ error: string }> {
@@ -30,13 +30,13 @@ export async function signInAction(_prev: { error: string }, formData: FormData)
     await supabase.auth.signOut();
     return { error: "This account doesn't have admin access." };
   }
-  redirect(await adminPath(""));
+  redirect(adminPath(""));
 }
 
 export async function signOutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect(await adminPath("/login"));
+  redirect(adminPath("/login"));
 }
 
 export type RowState = { ok: boolean; message?: string } | null;
