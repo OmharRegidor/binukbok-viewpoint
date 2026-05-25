@@ -76,11 +76,77 @@ export async function markArrived(bookingId: string, actorId: string): Promise<A
   return { ok: true };
 }
 
-// Scan path: look up by the QR's confirmation code, then check in.
-export async function markArrivedByCode(code: string, actorId: string): Promise<AdminActionResult> {
-  const b = await prisma.booking.findUnique({ where: { confirmationCode: code.trim() }, select: { id: true } });
-  if (!b) return { ok: false, message: "No booking found for that code." };
-  return markArrived(b.id, actorId);
+// QR check-in (used by /api/scan): resolve the code, validate state, flip to
+// CHECKED_IN, and return the details the scanner shows on success (guest, room,
+// balance to collect). Done in ONE transaction with a conditional update so the
+// transition + `alreadyArrived` flag stay correct even if two scanners hit the
+// same code at once (only one update wins; the other reports alreadyArrived).
+export type CheckInSummary = {
+  confirmationCode: string;
+  guestName: string;
+  room: string;
+  checkOut: Date;
+  balanceDue: number; // total minus the deposit already paid; collected on arrival
+};
+export type CheckInResult = { ok: true; booking: CheckInSummary; alreadyArrived: boolean } | { ok: false; message: string };
+
+// Staff-actionable reasons a code can't be checked in. The endpoint is admin-only
+// and rate-limited, so surfacing the specific state is a deliberate UX choice — an
+// authenticated front-desk user needs to know WHY (cancelled vs not-paid-yet).
+const CHECK_IN_BLOCKED: Partial<Record<BookingStatus, string>> = {
+  [BookingStatus.PENDING_PAYMENT]: "This booking isn't confirmed yet — verify the deposit first.",
+  [BookingStatus.PAYMENT_REVIEW]: "This booking isn't confirmed yet — verify the deposit first.",
+  [BookingStatus.CANCELLED]: "This booking was cancelled — it can't be checked in.",
+  [BookingStatus.EXPIRED]: "This booking expired (the hold lapsed) — it can't be checked in.",
+  [BookingStatus.COMPLETED]: "This guest has already checked out.",
+};
+
+export async function checkInByCode(code: string, actorId: string): Promise<CheckInResult> {
+  const trimmed = code.trim();
+  if (!trimmed) return { ok: false, message: "Missing booking code." };
+
+  return prisma.$transaction(async (tx) => {
+    const b = await tx.booking.findUnique({
+      where: { confirmationCode: trimmed },
+      select: {
+        id: true,
+        status: true,
+        totalPrice: true,
+        depositAmount: true,
+        checkOut: true,
+        guest: { select: { fullName: true } },
+        roomUnit: { select: { label: true, roomType: { select: { name: true } } } },
+      },
+    });
+    if (!b) return { ok: false, message: "No booking found for that code." };
+
+    if (b.status !== BookingStatus.CONFIRMED && b.status !== BookingStatus.CHECKED_IN) {
+      return { ok: false, message: CHECK_IN_BLOCKED[b.status] ?? "This booking can't be checked in." };
+    }
+
+    const booking: CheckInSummary = {
+      confirmationCode: trimmed,
+      guestName: b.guest.fullName,
+      room: `${b.roomUnit.roomType.name} · ${b.roomUnit.label}`,
+      checkOut: b.checkOut,
+      balanceDue: Math.max(b.totalPrice - b.depositAmount, 0),
+    };
+
+    if (b.status === BookingStatus.CHECKED_IN) return { ok: true, alreadyArrived: true, booking };
+
+    // Conditional update: only flips a still-CONFIRMED row. count===0 means a
+    // concurrent scan won the race → report it as already arrived (no 2nd event).
+    const res = await tx.booking.updateMany({
+      where: { id: b.id, status: BookingStatus.CONFIRMED },
+      data: { status: BookingStatus.CHECKED_IN, checkedInAt: new Date() },
+    });
+    if (res.count === 0) return { ok: true, alreadyArrived: true, booking };
+
+    await tx.bookingEvent.create({
+      data: { bookingId: b.id, fromStatus: BookingStatus.CONFIRMED, toStatus: BookingStatus.CHECKED_IN, actor: `admin:${actorId}` },
+    });
+    return { ok: true, alreadyArrived: false, booking };
+  });
 }
 
 // Shared OR-clause for booking search: guest name/email/phone, confirmation code,

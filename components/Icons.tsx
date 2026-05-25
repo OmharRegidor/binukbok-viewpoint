@@ -326,3 +326,27 @@ export function LogIn(props: IconProps) {
     </svg>
   );
 }
+
+// Circle with an exclamation — error / can't-proceed.
+export function AlertCircle(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 8v4" />
+      <path d="M12 16h.01" />
+    </svg>
+  );
+}
+
+// Scanner frame with a center line — QR/code scanning.
+export function ScanLine(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+      <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+      <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+      <path d="M5 12h14" />
+    </svg>
+  );
+}

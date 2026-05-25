@@ -1,6 +1,6 @@
 import { PrismaClient, type BookingStatus } from "@prisma/client";
 import { generateConfirmationCode, generateViewToken } from "../lib/tokens";
-import { getArrivals, getPendingDeposits, markArrived, markArrivedByCode, verifyDeposit } from "../lib/db/admin";
+import { checkInByCode, getArrivals, getPendingDeposits, markArrived, verifyDeposit } from "../lib/db/admin";
 
 const prisma = new PrismaClient();
 const EMAIL = "admin.test@example.test";
@@ -54,9 +54,17 @@ async function main() {
 
   const code = "BVP-ADMIN1";
   const b3 = await makeBooking("CONFIRMED", 8, 10, code);
-  const r4 = await markArrivedByCode(code, ACTOR);
+  const r4 = await checkInByCode(code, ACTOR);
   const s4 = await prisma.booking.findUnique({ where: { id: b3.id }, select: { status: true } });
-  check(r4.ok && s4?.status === "CHECKED_IN", "markArrivedByCode: scan → CHECKED_IN");
+  check(r4.ok && !r4.alreadyArrived && s4?.status === "CHECKED_IN", "checkInByCode: scan → CHECKED_IN");
+
+  const r4b = await checkInByCode(code, ACTOR);
+  check(r4b.ok && r4b.alreadyArrived, "checkInByCode idempotent → alreadyArrived on re-scan");
+
+  const b3b = await makeBooking("CANCELLED", 9, 10, "BVP-CANCEL");
+  const r4c = await checkInByCode("BVP-CANCEL", ACTOR);
+  check(!r4c.ok, "checkInByCode rejects a cancelled booking with a reason");
+  void b3b;
 
   const pend = await getPendingDeposits();
   check(pend.some((p) => p.id === b2.id), "getPendingDeposits lists pending bookings");
