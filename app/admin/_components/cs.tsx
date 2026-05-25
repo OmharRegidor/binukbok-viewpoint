@@ -28,7 +28,7 @@ export function StatCard({
   dark?: boolean; // dark navy accent card (e.g. Revenue Forecast)
 }) {
   return (
-    <div className={`flex flex-col rounded-2xl p-6 ring-1 ${dark ? "bg-navy text-white ring-navy" : "bg-white text-navy ring-navy/5"}`}>
+    <div className={`flex min-h-[9rem] flex-col rounded-2xl p-6 ring-1 ${dark ? "bg-navy text-white ring-navy" : "bg-white text-navy ring-navy/5"}`}>
       <div className="flex items-center justify-between">
         <p className={`text-[15px] font-bold ${dark ? "text-white/90" : "text-navy"}`}>{label}</p>
         <span className={dark ? "text-white/45" : "text-navy/40"}>{icon}</span>
@@ -49,12 +49,19 @@ export function StatCard({
 
       {typeof progress === "number" && (
         <div className="mt-auto pt-6">
-          <div className={`h-2 w-full overflow-hidden rounded-full ${dark ? "bg-white/20" : "bg-navy/10"}`}>
+          <div
+            role="progressbar"
+            aria-label={label}
+            aria-valuenow={Math.round(Math.min(100, Math.max(0, progress)))}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className={`h-2 w-full overflow-hidden rounded-full ${dark ? "bg-white/20" : "bg-navy/10"}`}
+          >
             <div className="h-full rounded-full bg-teal" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} />
           </div>
         </div>
       )}
-      {footer && <div className={`mt-auto pt-5 text-[14px] ${dark ? "text-white/80" : "text-navy/65"}`}>{footer}</div>}
+      {footer && <div className={`mt-auto pt-5 text-[14px] ${dark ? "text-white/90" : "text-navy/65"}`}>{footer}</div>}
     </div>
   );
 }

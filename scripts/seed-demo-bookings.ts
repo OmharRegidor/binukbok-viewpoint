@@ -45,8 +45,12 @@ function manilaTodayUTC(): Date {
 }
 
 async function clean() {
-  const { count } = await prisma.booking.deleteMany({ where: { guest: { email: { startsWith: EMAIL_PREFIX } } } });
-  await prisma.guest.deleteMany({ where: { email: { startsWith: EMAIL_PREFIX } } });
+  // Bookings first (FK), then guests — in one transaction so a mid-run failure
+  // doesn't leave orphan guests.
+  const [{ count }] = await prisma.$transaction([
+    prisma.booking.deleteMany({ where: { guest: { email: { startsWith: EMAIL_PREFIX } } } }),
+    prisma.guest.deleteMany({ where: { email: { startsWith: EMAIL_PREFIX } } }),
+  ]);
   console.log(`Removed ${count} demo booking(s) and their guests.`);
 }
 

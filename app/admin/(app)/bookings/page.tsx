@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { BookingStatus } from "@prisma/client";
 import { getDashboardCounts, listBookings } from "@/lib/db/admin";
 import { Banknote, Bed, Luggage } from "@/components/Icons";
@@ -73,18 +74,22 @@ export default async function BookingsPage({
   ]);
 
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
-  const firstShown = total === 0 ? 0 : (page - 1) * PER_PAGE + 1;
-  const lastShown = Math.min(page * PER_PAGE, total);
 
   const baseParams = new URLSearchParams();
   if (sp.q) baseParams.set("q", sp.q);
-  if (sp.status) baseParams.set("status", sp.status);
+  if (status) baseParams.set("status", status); // validated value only — drops invalid ?status=
   if (sp.range) baseParams.set("range", sp.range);
   const pageHref = (p: number) => {
     const u = new URLSearchParams(baseParams);
     u.set("page", String(p));
     return `/admin/bookings?${u.toString()}`;
   };
+
+  // Out-of-range page (e.g. ?page=99) → bounce to the last real page.
+  if (total > 0 && page > totalPages) redirect(pageHref(totalPages));
+
+  const firstShown = total === 0 ? 0 : (page - 1) * PER_PAGE + 1;
+  const lastShown = Math.min(page * PER_PAGE, total);
 
   return (
     <>
@@ -139,7 +144,7 @@ export default async function BookingsPage({
             <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] border-collapse text-left">
                 <thead>
-                  <tr className="border-y border-navy/10 bg-cream/40 text-[13px] font-bold uppercase tracking-wide text-navy/55">
+                  <tr className="border-b-2 border-navy/15 bg-cream/60 text-[13px] font-bold uppercase tracking-wide text-navy/55">
                     <th className="px-6 py-3">Guest Name</th>
                     <th className="px-3 py-3">Room Type</th>
                     <th className="px-3 py-3">Dates</th>
@@ -158,12 +163,12 @@ export default async function BookingsPage({
                           </span>
                           <div className="min-w-0">
                             <p className="truncate text-[15px] font-bold text-navy">{b.guest.fullName}</p>
-                            <p className="font-mono text-xs text-navy/50">#{b.confirmationCode}</p>
+                            <p className="font-mono text-[13px] text-navy/60">#{b.confirmationCode}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <span className="rounded-full bg-navy/5 px-3 py-1 text-[13px] font-medium text-navy/80">{b.roomUnit.roomType.name}</span>
+                        <span className="rounded-md bg-navy/5 px-3 py-1 text-[13px] font-medium text-navy/80">{b.roomUnit.roomType.name}</span>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-[14px] text-navy/80">
                         {dateShort.format(b.checkIn)} – {dateShort.format(b.checkOut)}
@@ -187,6 +192,7 @@ export default async function BookingsPage({
             <p className="text-[14px] text-navy/60">
               Showing {firstShown}–{lastShown} of {total} booking{total === 1 ? "" : "s"}
             </p>
+            {totalPages > 1 && (
             <div className="flex items-center gap-1.5">
               {page > 1 ? (
                 <Link href={pageHref(page - 1)} className="rounded-lg border border-navy/15 px-3 py-2 text-[14px] font-semibold text-navy transition hover:bg-navy/5">Previous</Link>
@@ -206,6 +212,7 @@ export default async function BookingsPage({
                 <span className="rounded-lg border border-navy/10 px-3 py-2 text-[14px] font-semibold text-navy/30">Next</span>
               )}
             </div>
+            )}
           </div>
         </section>
       </div>

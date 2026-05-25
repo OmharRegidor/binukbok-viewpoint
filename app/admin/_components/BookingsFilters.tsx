@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Search } from "@/components/Icons";
 
 const STATUS_OPTIONS = [
@@ -32,6 +32,7 @@ export function BookingsFilters() {
   const [q, setQ] = useState(params.get("q") ?? "");
   const [status, setStatus] = useState(params.get("status") ?? "ALL");
   const [range, setRange] = useState(params.get("range") ?? "all");
+  const [isPending, startTransition] = useTransition();
 
   function apply(e: React.FormEvent) {
     e.preventDefault();
@@ -40,7 +41,7 @@ export function BookingsFilters() {
     if (status !== "ALL") sp.set("status", status);
     if (range !== "all") sp.set("range", range);
     const qs = sp.toString();
-    router.push(`/admin/bookings${qs ? `?${qs}` : ""}`);
+    startTransition(() => router.push(`/admin/bookings${qs ? `?${qs}` : ""}`));
   }
 
   return (
@@ -81,9 +82,11 @@ export function BookingsFilters() {
 
         <button
           type="submit"
-          className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-teal px-6 text-[15px] font-bold text-white transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+          disabled={isPending}
+          aria-busy={isPending}
+          className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-teal px-6 text-[15px] font-bold text-white transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40 disabled:opacity-70"
         >
-          Apply Filters
+          {isPending ? "Applying…" : "Apply Filters"}
         </button>
       </div>
     </form>

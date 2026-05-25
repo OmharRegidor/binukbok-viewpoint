@@ -23,7 +23,7 @@ export function BookingActionRow({
   const [state, dispatch, isPending] = useActionState(action, null);
   const done = state?.ok === true;
   const bg = variant === "teal" ? "bg-teal hover:bg-teal-bright" : "bg-navy hover:bg-navy/90";
-  const sizing = size === "sm" ? "min-h-[40px] rounded-lg px-4 text-[14px]" : "min-h-[52px] rounded-xl px-6 text-[17px]";
+  const sizing = size === "sm" ? "min-h-[44px] rounded-lg px-4 text-[14px]" : "min-h-[52px] rounded-xl px-6 text-[17px]";
 
   return (
     <form action={dispatch} className="flex flex-col items-end gap-1">
