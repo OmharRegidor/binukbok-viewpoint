@@ -1,4 +1,4 @@
-import { BookingStatus } from "@prisma/client";
+import { BookingStatus, Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
 
 // Admin-side reads + mutations. These are auth-AGNOSTIC: the caller (a Clerk-gated
@@ -95,19 +95,24 @@ export async function markArrivedByCode(code: string, actorId: string): Promise<
   return markArrived(b.id, actorId);
 }
 
-// Find a booking by guest name, confirmation code, phone, or email (for phone inquiries).
+// Shared OR-clause for booking search: guest name/email/phone, confirmation code,
+// and room unit label (room #). Reused by searchBookings + listBookings.
+function buildSearchOr(term: string): Prisma.BookingWhereInput["OR"] {
+  return [
+    { confirmationCode: { contains: term, mode: "insensitive" } },
+    { guest: { fullName: { contains: term, mode: "insensitive" } } },
+    { guest: { email: { contains: term, mode: "insensitive" } } },
+    { guest: { phone: { contains: term } } },
+    { roomUnit: { label: { contains: term, mode: "insensitive" } } },
+  ];
+}
+
+// Find a booking by guest name, confirmation code, phone, email, or room label.
 export async function searchBookings(q: string) {
   const term = q.trim();
   if (term.length < 2) return [];
   return prisma.booking.findMany({
-    where: {
-      OR: [
-        { confirmationCode: { contains: term, mode: "insensitive" } },
-        { guest: { fullName: { contains: term, mode: "insensitive" } } },
-        { guest: { email: { contains: term, mode: "insensitive" } } },
-        { guest: { phone: { contains: term } } },
-      ],
-    },
+    where: { OR: buildSearchOr(term) },
     orderBy: { checkIn: "desc" },
     take: 25,
     select: LIST_SELECT,
@@ -141,4 +146,46 @@ export async function getDashboardCounts() {
     prisma.booking.count({ where: { status: BookingStatus.CHECKED_IN } }),
   ]);
   return { arrivalsToday, awaitingDeposit, inHouse };
+}
+
+// Paginated, filterable list of all bookings for the admin Bookings table.
+// `from`/`to` are UTC-midnight Dates standing for Manila calendar dates (build them
+// like manilaToday() does); `to` is treated as inclusive. Returns the page rows plus
+// the total count (for "Showing X of N"). count + page fetch run in one transaction
+// so the total is consistent with the rows.
+export type ListBookingsOpts = {
+  q?: string;
+  status?: BookingStatus | "ALL";
+  from?: Date;
+  to?: Date;
+  skip?: number;
+  take?: number;
+};
+
+const MAX_TAKE = 100; // never pull unbounded rows for a UI table
+
+export async function listBookings(opts: ListBookingsOpts = {}) {
+  const { q, status, from, to, skip = 0 } = opts;
+  const take = Math.min(Math.max(opts.take ?? 10, 1), MAX_TAKE);
+
+  const where: Prisma.BookingWhereInput = {};
+
+  const term = q?.trim() ?? "";
+  if (term.length >= 2) where.OR = buildSearchOr(term);
+
+  if (status && status !== "ALL") where.status = status;
+
+  if (from || to) {
+    const range: Prisma.DateTimeFilter = {};
+    if (from) range.gte = from;
+    if (to) range.lt = new Date(to.getTime() + DAY_MS); // inclusive upper bound
+    where.checkIn = range;
+  }
+
+  const [total, rows] = await prisma.$transaction([
+    prisma.booking.count({ where }),
+    prisma.booking.findMany({ where, orderBy: { checkIn: "desc" }, skip, take, select: LIST_SELECT }),
+  ]);
+
+  return { rows, total };
 }
