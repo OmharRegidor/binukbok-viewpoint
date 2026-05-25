@@ -26,9 +26,12 @@
     ]
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.65",
+    "@ai-sdk/react": "^3.0.193",
     "@prisma/client": "^6.19.3",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.106.1",
+    "ai": "^6.0.191",
     "next": "15.1.6",
     "qrcode": "^1.5.4",
     "react": "19.0.0",

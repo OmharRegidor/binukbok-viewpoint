@@ -24,6 +24,9 @@ export async function middleware(request: NextRequest) {
   const local = isLocalHost(host);
   const path = request.nextUrl.pathname;
 
+  // API routes (e.g. /api/chat) handle their own auth; never rewrite or gate them here.
+  if (path.startsWith("/api")) return NextResponse.next();
+
   // Admin is reachable only via the admin subdomain. In local dev, redirect
   // localhost/admin/* → admin.localhost/* ; in production, hide it entirely (404).
   if (!adminHost && path.startsWith("/admin")) {
