@@ -74,6 +74,21 @@ export async function getAvailability(roomTypeSlug: string, checkIn: Date, check
   return { roomType, freeUnits };
 }
 
+// Free-unit counts for every room type over a date range (for the AI assistant).
+// Returns availability only — no pricing — to keep the read-only tool scoped to
+// "availability & dates" (and avoid feeding extra data to the model).
+export async function getAvailabilityAll(checkIn: Date, checkOut: Date) {
+  const types = await prisma.roomType.findMany({
+    select: {
+      slug: true,
+      name: true,
+      _count: { select: { units: { where: { status: "ACTIVE", bookings: { none: overlapWhere(checkIn, checkOut) } } } } },
+    },
+    orderBy: { basePricePerNight: "asc" },
+  });
+  return types.map((t) => ({ slug: t.slug, name: t.name, freeUnits: t._count.units }));
+}
+
 // ── Create a booking (server-authoritative) ──────────────────────────────────
 // Guest books a room TYPE; the server validates, recomputes price, assigns a free
 // UNIT, and inserts guest + booking + dive add-ons + audit event in a transaction.

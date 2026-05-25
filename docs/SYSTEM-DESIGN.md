@@ -439,7 +439,7 @@ flowchart TD
 1. Admin dashboard (Clerk): deposit verification → `CONFIRMED`; "today's arrivals" list → tap/scan → `CHECKED_IN`
 2. Real GCash receiver details + confirmed unit counts (currently a gray placeholder / 1 each)
 3. Hardening: rate-limit `/b/*` + scan endpoint; QR in the confirmation email (Resend); auto-expire unpaid holds (cron)
-4. Phase 3 (AI chatbot)
+4. Phase 3 (AI chatbot) — ✅ **implemented** on `feat/ai-assistant`: admin-only `POST /api/chat` → `gpt-4o-mini` (Vercel AI SDK v6) with a read-only `checkAvailability` tool over Prisma (`getAvailability`/`getAvailabilityAll`, no PII, no pricing), surfaced on a dedicated `/admin/ai` page (`AvailabilityChat`, `useChat`). Middleware bypasses `/api/*` (routes self-gate via `getAdmin()`). **Before production (Custodio P0): add per-admin rate-limiting on `/api/chat` (Upstash) + set an OpenAI spend cap.** Optional: bump React to ≥19.0.1 for the `@ai-sdk/react` peer.
 
 ---
 
