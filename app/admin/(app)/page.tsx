@@ -3,6 +3,7 @@ import { Banknote, Bed, Luggage, TrendingUp } from "@/components/Icons";
 import { Topbar } from "../_components/Topbar";
 import { ArrivalsTable, ExpectedArrivalsCard, FacilityStatus, PendingActions, StatCard, type ArrivalRow } from "../_components/cs";
 import { DEMO_FACILITIES, DEMO_OCCUPANCY, DEMO_PENDING, DEMO_REVENUE } from "../_components/demo";
+import { openAdminScan } from "../_components/AdminQuickTools";
 
 export const dynamic = "force-dynamic";
 
@@ -57,7 +58,7 @@ export default async function OverviewPage() {
             count={counts.arrivalsToday}
             icon={<Luggage className="h-5 w-5" />}
             ctaLabel="Check-in Center"
-            ctaHref="/admin/bookings"
+            ctaOnClick={openAdminScan}
           />
         </div>
 
