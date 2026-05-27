@@ -71,6 +71,7 @@ function SpeedDialFab({
       <div>
         {/* Fan-out actions */}
         <div
+          id="admin-quick-tools-actions"
           className={`flex flex-col items-end gap-2 transition-all duration-150 ${
             open ? "pointer-events-auto opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-2"
           }`}
@@ -99,6 +100,7 @@ function SpeedDialFab({
           type="button"
           onClick={onToggle}
           aria-expanded={open}
+          aria-controls="admin-quick-tools-actions"
           aria-label={open ? "Close quick tools" : "Open quick tools"}
           className={`pointer-events-auto mt-3 grid h-14 w-14 place-items-center rounded-full bg-teal text-white shadow-xl transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40 ${
             open ? "rotate-45" : ""
