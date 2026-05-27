@@ -12,8 +12,8 @@ const EXAMPLES = [
 
 // Admin-only, read-only availability assistant. useChat() posts to /api/chat
 // (AI SDK default); the route streams gpt-4o-mini answers via a read-only tool.
-export function AvailabilityChat() {
-  const { messages, sendMessage, status, error } = useChat();
+export function AvailabilityChat({ onClearReady }: { onClearReady?: (clear: () => void) => void } = {}) {
+  const { messages, sendMessage, status, error, setMessages } = useChat();
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const busy = status === "submitted" || status === "streaming";
@@ -22,6 +22,14 @@ export function AvailabilityChat() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, busy]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { onClearReady?.(clear); }, [onClearReady]);
+
+  function clear() {
+    setMessages([]);
+    setInput("");
+  }
 
   function ask(text: string) {
     const t = text.trim();
@@ -33,7 +41,7 @@ export function AvailabilityChat() {
   const lastIsUser = messages[messages.length - 1]?.role === "user";
 
   return (
-    <div className="flex h-[calc(100vh-13rem)] min-h-[28rem] flex-col rounded-2xl bg-white ring-1 ring-navy/5">
+    <div className="flex h-full min-h-0 flex-col rounded-2xl bg-white ring-1 ring-navy/5">
       <div className="flex-1 space-y-4 overflow-y-auto p-6" aria-live="polite">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-center">
