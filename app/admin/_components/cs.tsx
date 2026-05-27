@@ -1,3 +1,5 @@
+"use client";
+
 // Coastal Serenity-style presentational building blocks for the Overview page.
 // All server-renderable (no client hooks). Real data is passed in by the page;
 // mock data comes from ./demo.
@@ -72,26 +74,33 @@ export function ExpectedArrivalsCard({
   icon,
   ctaLabel,
   ctaHref,
+  ctaOnClick,
 }: {
   count: number;
   icon: React.ReactNode;
   ctaLabel: string;
-  ctaHref: string;
+  ctaHref?: string;
+  ctaOnClick?: () => void;
 }) {
+  const ctaClass =
+    "flex min-h-[48px] w-full items-center justify-center rounded-xl bg-teal px-6 text-[16px] font-bold text-white transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40";
   return (
     <div className="flex flex-col rounded-2xl bg-navy p-6 text-white ring-1 ring-navy">
-      <div className="flex items-center justify-between">
-        <p className="text-[15px] font-bold text-white/90">Expected Arrivals</p>
-        <span className="text-white/45">{icon}</span>
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-white/70">
+        <span aria-hidden>{icon}</span>
+        Expected Arrivals
       </div>
       <p className="mt-3 text-4xl font-extrabold leading-none">{count}</p>
       <div className="mt-auto pt-6">
-        <Link
-          href={ctaHref}
-          className="flex min-h-[48px] w-full items-center justify-center rounded-xl bg-teal px-6 text-[16px] font-bold text-white transition hover:bg-teal-bright"
-        >
-          {ctaLabel}
-        </Link>
+        {ctaOnClick ? (
+          <button type="button" onClick={ctaOnClick} className={ctaClass}>
+            {ctaLabel}
+          </button>
+        ) : (
+          <Link href={ctaHref ?? "#"} className={ctaClass}>
+            {ctaLabel}
+          </Link>
+        )}
       </div>
     </div>
   );
