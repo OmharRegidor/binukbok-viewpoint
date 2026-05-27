@@ -12,7 +12,7 @@ export type NavItem = {
 export const ADMIN_NAV: NavItem[] = [
   { href: "/admin", norm: "/", label: "Overview", Icon: LayoutGrid },
   { href: "/admin/bookings", norm: "/bookings", label: "Bookings", Icon: ClipboardList },
-{ href: "/admin/calendar", norm: "/calendar", label: "Calendar", Icon: Calendar },
+  { href: "/admin/calendar", norm: "/calendar", label: "Calendar", Icon: Calendar },
   { href: "/admin/resort-config", norm: "/resort-config", label: "Resort Config", Icon: Settings },
   { href: "/admin/account", norm: "/account", label: "Account", Icon: Users },
 ];
