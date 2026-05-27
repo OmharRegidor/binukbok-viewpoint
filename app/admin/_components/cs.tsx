@@ -1,8 +1,9 @@
 "use client";
 
 // Coastal Serenity-style presentational building blocks for the Overview page.
-// All server-renderable (no client hooks). Real data is passed in by the page;
-// mock data comes from ./demo.
+// Marked "use client" so ExpectedArrivalsCard can accept a function-prop CTA
+// (passed from the server Overview page into the admin FAB tools). Real data
+// is passed in by the page; mock data comes from ./demo.
 
 import Link from "next/link";
 import { Anchor, GlassWater, Home, Receipt, Waves, Wrench } from "@/components/Icons";
