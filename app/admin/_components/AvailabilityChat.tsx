@@ -23,6 +23,8 @@ export function AvailabilityChat({ onClearReady }: { onClearReady?: (clear: () =
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, busy]);
 
+  // Callers should keep `onClearReady` stable (e.g. assign into a ref or wrap in
+  // useCallback). A non-stable callback fires this effect on every render.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { onClearReady?.(clear); }, [onClearReady]);
 
