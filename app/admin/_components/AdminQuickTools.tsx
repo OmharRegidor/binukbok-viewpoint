@@ -68,8 +68,7 @@ function SpeedDialFab({
       className="pointer-events-none fixed right-4 bottom-4 z-40 flex flex-col items-end gap-3"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      {/* On mobile, lift above the Topbar mobile nav strip. */}
-      <div className="mb-16 md:mb-0">
+      <div>
         {/* Fan-out actions */}
         <div
           className={`flex flex-col items-end gap-2 transition-all duration-150 ${
@@ -118,14 +117,15 @@ function AiPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
   const clearRef = useRef<() => void>(() => {});
 
   return (
-    <aside
+    <div
       role="dialog"
       aria-label="Availability assistant"
-      aria-hidden={!open}
-      // translate-x-full + pointer-events-none when closed keeps the chat
-      // mounted (so useChat history survives) but off-screen and inert.
+      inert={!open || undefined}
+      // translate-x-full when closed keeps the chat mounted (so useChat history
+      // survives) but off-screen. inert (HTML attribute, native React 19 support)
+      // suppresses focus, pointer events, and AT visibility for the closed state.
       className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-full flex-col bg-white shadow-2xl ring-1 ring-navy/10 transition-transform duration-200 md:w-[420px] ${
-        open ? "translate-x-0" : "pointer-events-none translate-x-full"
+        open ? "translate-x-0" : "translate-x-full"
       }`}
     >
       <header className="flex items-center justify-between gap-2 border-b border-navy/10 px-4 py-3">
@@ -158,7 +158,7 @@ function AiPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
       <div className="min-h-0 flex-1 p-3">
         <AvailabilityChat onClearReady={(c) => { clearRef.current = c; }} />
       </div>
-    </aside>
+    </div>
   );
 }
 
