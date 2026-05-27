@@ -41,7 +41,7 @@ export function AvailabilityChat({ onClearReady }: { onClearReady?: (clear: () =
   const lastIsUser = messages[messages.length - 1]?.role === "user";
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-2xl bg-white ring-1 ring-navy/5">
+    <div className="flex h-full min-h-[28rem] flex-col rounded-2xl bg-white ring-1 ring-navy/5">
       <div className="flex-1 space-y-4 overflow-y-auto p-6" aria-live="polite">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-center">
