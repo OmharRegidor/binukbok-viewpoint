@@ -88,6 +88,7 @@ export default async function BookingsPage({
   // Out-of-range page (e.g. ?page=99) → bounce to the last real page.
   if (total > 0 && page > totalPages) redirect(pageHref(totalPages));
 
+  const hasFilter = !!(sp.q || sp.status || sp.range);
   const firstShown = total === 0 ? 0 : (page - 1) * PER_PAGE + 1;
   const lastShown = Math.min(page * PER_PAGE, total);
 
@@ -138,7 +139,7 @@ export default async function BookingsPage({
 
           {rows.length === 0 ? (
             <p className="mx-6 mb-6 rounded-xl border border-dashed border-navy/15 px-5 py-10 text-center text-[15px] text-navy/60">
-              No bookings match these filters.
+              {hasFilter ? "No bookings match these filters." : "No bookings yet."}
             </p>
           ) : (
             <div className="overflow-x-auto">
@@ -150,7 +151,7 @@ export default async function BookingsPage({
                     <th className="px-3 py-3">Dates</th>
                     <th className="px-3 py-3">Status</th>
                     <th className="px-3 py-3">Amount</th>
-                    <th className="px-6 py-3 text-right">Action</th>
+                    <th className="sticky right-0 z-10 bg-cream/95 px-6 py-3 text-right backdrop-blur-sm">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,7 +178,7 @@ export default async function BookingsPage({
                         <StatusPill status={b.status} />
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-[15px] font-bold text-navy">{peso.format(b.totalPrice)}</td>
-                      <td className="px-6 py-4">
+                      <td className="sticky right-0 z-10 bg-white px-6 py-4">
                         <div className="flex justify-end">{actionFor(b)}</div>
                       </td>
                     </tr>

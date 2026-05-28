@@ -2,6 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, tool, type UIMessage } from "ai";
 import { z } from "zod";
 import { getAdmin } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 import { getAvailability, getAvailabilityAll } from "@/lib/db/bookings";
 
 export const maxDuration = 30;
@@ -14,6 +15,15 @@ export async function POST(req: Request) {
   // Admin-only — re-check on the handler itself (not just middleware).
   const admin = await getAdmin();
   if (!admin) return new Response("Unauthorized", { status: 401 });
+
+  // Best-effort rate limit: 30 AI questions per admin per minute.
+  const rl = rateLimit(`chat:${admin.id}`, 30, 60_000);
+  if (!rl.ok) {
+    return new Response("Too many requests — wait a moment and try again.", {
+      status: 429,
+      headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) },
+    });
+  }
 
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return new Response("Bad Request", { status: 400 });

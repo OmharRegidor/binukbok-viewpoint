@@ -18,14 +18,14 @@ export function Topbar({ title }: { title: string }) {
         <h1 className="text-2xl font-extrabold text-navy sm:text-[28px]">{title}</h1>
 
         <div className="flex items-center gap-1.5 sm:gap-2.5">
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="relative grid h-11 w-11 place-items-center rounded-full text-navy/70 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+          {/* Notifications not yet implemented — presentational only. */}
+          <span
+            aria-hidden
+            title="Notifications coming soon"
+            className="grid h-11 w-11 cursor-default place-items-center rounded-full text-navy/35"
           >
             <Bell className="h-5 w-5" />
-            <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-coral ring-2 ring-cream" />
-          </button>
+          </span>
 
           <Link
             href="/admin/bookings"

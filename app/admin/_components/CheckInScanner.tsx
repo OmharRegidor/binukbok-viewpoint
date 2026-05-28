@@ -107,6 +107,9 @@ export function CheckInScanner() {
   // Camera setup + detection loop.
   useEffect(() => {
     mounted.current = true;
+    // Capture the ref value at effect time so the cleanup function references the
+    // same node (avoids the react-hooks/exhaustive-deps stale-ref warning).
+    const videoEl = videoRef.current;
 
     if (!navigator.mediaDevices?.getUserMedia) {
       setCamera("unsupported");
@@ -123,10 +126,9 @@ export function CheckInScanner() {
           return;
         }
         streamRef.current = stream;
-        const video = videoRef.current;
-        if (video) {
-          video.srcObject = stream;
-          await video.play().catch(() => {});
+        if (videoEl) {
+          videoEl.srcObject = stream;
+          await videoEl.play().catch(() => {});
         }
         setCamera("on");
 
@@ -152,7 +154,7 @@ export function CheckInScanner() {
       if (interval) clearInterval(interval);
       streamRef.current?.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
-      if (videoRef.current) videoRef.current.srcObject = null;
+      if (videoEl) videoEl.srcObject = null;
     };
   }, [readFrame, submit]);
 

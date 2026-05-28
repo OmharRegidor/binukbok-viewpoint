@@ -25,6 +25,14 @@ export async function POST(req: Request) {
   const admin = await getAdmin();
   if (!admin) return Response.json({ ok: false, message: "Not signed in as an admin." }, { status: 401 });
 
+  // Parse + shape-validate BEFORE consuming a rate-limit slot so junk / misread QR
+  // codes (wrong format, garbage data) don't exhaust the admin's scan budget.
+  const parsed = Body.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return Response.json({ ok: false, message: "Couldn't read that code." }, { status: 400 });
+
+  const code = parsed.data.code.toUpperCase();
+  if (!CODE_RE.test(code)) return Response.json({ ok: false, message: "That doesn't look like a booking code." }, { status: 400 });
+
   const rl = rateLimit(`scan:${admin.id}`, LIMIT, WINDOW_MS);
   if (!rl.ok) {
     return Response.json(
@@ -32,12 +40,6 @@ export async function POST(req: Request) {
       { status: 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } },
     );
   }
-
-  const parsed = Body.safeParse(await req.json().catch(() => null));
-  if (!parsed.success) return Response.json({ ok: false, message: "Couldn't read that code." }, { status: 400 });
-
-  const code = parsed.data.code.toUpperCase();
-  if (!CODE_RE.test(code)) return Response.json({ ok: false, message: "That doesn't look like a booking code." }, { status: 400 });
 
   const result = await checkInByCode(code, admin.id);
   // Business outcomes (not found / wrong state) return 200 with ok:false so the

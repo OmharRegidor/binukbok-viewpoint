@@ -183,7 +183,7 @@ export async function getPendingCheckIns(today: Date = manilaToday()) {
   return prisma.booking.findMany({
     where: { status: BookingStatus.CONFIRMED, checkIn: { gte: today, lt: next } },
     orderBy: { checkIn: "asc" },
-    take: 8,
+    take: 20,
     select: {
       id: true,
       confirmationCode: true,

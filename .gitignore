@@ -31,6 +31,9 @@ yarn.lock
 # playwright mcp output (screenshots, snapshots, console logs)
 .playwright-mcp/
 
+# noxa dev-team QA scratch artifacts (review reports, screenshots)
+.noxa/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
