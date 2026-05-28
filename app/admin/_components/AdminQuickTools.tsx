@@ -68,47 +68,45 @@ function SpeedDialFab({
       className="pointer-events-none fixed right-4 bottom-4 z-40 flex flex-col items-end gap-3"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      <div>
-        {/* Fan-out actions */}
-        <div
-          id="admin-quick-tools-actions"
-          className={`flex flex-col items-end gap-2 transition-all duration-150 ${
-            open ? "pointer-events-auto opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-2"
-          }`}
-          aria-hidden={!open}
-        >
-          <button
-            type="button"
-            onClick={onPickScan}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-lg ring-1 ring-navy/10 transition hover:bg-navy/5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
-          >
-            <ScanLine className="h-4 w-4" />
-            Scan check-in
-          </button>
-          <button
-            type="button"
-            onClick={onPickAi}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-lg ring-1 ring-navy/10 transition hover:bg-navy/5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
-          >
-            <Sparkles className="h-4 w-4" />
-            Ask AI
-          </button>
-        </div>
-
-        {/* Primary toggle */}
+      {/* Fan-out actions */}
+      <div
+        id="admin-quick-tools-actions"
+        className={`flex flex-col items-end gap-2 transition-all duration-150 ${
+          open ? "pointer-events-auto opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-2"
+        }`}
+        aria-hidden={!open}
+      >
         <button
           type="button"
-          onClick={onToggle}
-          aria-expanded={open}
-          aria-controls="admin-quick-tools-actions"
-          aria-label={open ? "Close quick tools" : "Open quick tools"}
-          className={`pointer-events-auto mt-3 grid h-14 w-14 place-items-center rounded-full bg-teal text-white shadow-xl transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40 ${
-            open ? "rotate-45" : ""
-          }`}
+          onClick={onPickScan}
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-lg ring-1 ring-navy/10 transition hover:bg-navy/5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
         >
-          {open ? <Close className="h-6 w-6" /> : <Sparkles className="h-6 w-6" />}
+          <ScanLine className="h-4 w-4" />
+          Scan check-in
+        </button>
+        <button
+          type="button"
+          onClick={onPickAi}
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-lg ring-1 ring-navy/10 transition hover:bg-navy/5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+        >
+          <Sparkles className="h-4 w-4" />
+          Ask AI
         </button>
       </div>
+
+      {/* Primary toggle */}
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls="admin-quick-tools-actions"
+        aria-label={open ? "Close quick tools" : "Open quick tools"}
+        className={`pointer-events-auto grid h-14 w-14 place-items-center rounded-full bg-teal text-white shadow-xl transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40 ${
+          open ? "rotate-45" : ""
+        }`}
+      >
+        {open ? <Close className="h-6 w-6" /> : <Sparkles className="h-6 w-6" />}
+      </button>
     </div>
   );
 }
