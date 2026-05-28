@@ -4,7 +4,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Bed, ChevronRight, LogIn, Plus, Receipt } from "@/components/Icons";
+import { ArrowRight, Bed, ChevronRight, LogIn } from "@/components/Icons";
 import type { CalendarDay, CalendarMonth, PendingCheckIn, TodayStats } from "@/lib/db/calendar";
 
 const BASE = "/admin/calendar";
@@ -114,7 +114,7 @@ function DayCell({ d }: { d: CalendarDay }) {
 // ── Full month grid ──────────────────────────────────────────────────────────
 export function CalendarGrid({ month }: { month: CalendarMonth }) {
   return (
-    <div className="mt-5 overflow-x-auto">
+    <div className="mt-5 overflow-x-auto p-1">
       <div role="grid" aria-label={`Room availability for ${month.label}`} className="min-w-[640px]">
         <div role="row" className="grid grid-cols-7 gap-2">
           {WEEKDAYS.map((w) => (
@@ -133,26 +133,7 @@ export function CalendarGrid({ month }: { month: CalendarMonth }) {
           ))}
         </div>
       </div>
-
-      {/* Legend — swatches mirror the actual cell pills for visual consistency. */}
-      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-semibold text-navy/65">
-        <Legend swatchCls="bg-teal/15 text-teal-deep" sample="Available" />
-        <Legend swatchCls="bg-amber-100 text-amber-900" sample="free" />
-        <Legend swatchCls="bg-coral/15 text-coral-dark" sample="Full" />
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-4 w-4 rounded-md ring-2 ring-teal" />
-          Today
-        </span>
-      </div>
     </div>
-  );
-}
-
-function Legend({ swatchCls, sample }: { swatchCls: string; sample: string }) {
-  return (
-    <span className="inline-flex items-center gap-1.5">
-      <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-bold ${swatchCls}`}>{sample}</span>
-    </span>
   );
 }
 
@@ -223,22 +204,6 @@ export function QuickResortView({ occupancyPct }: { occupancyPct: number }) {
   );
 }
 
-// ── Sidebar: Daily summary report (no reporting system yet — disabled stub) ───
-export function DailySummaryButton() {
-  return (
-    <button
-      type="button"
-      disabled
-      title="Reporting isn't available yet"
-      className="flex w-full items-center justify-center gap-2 rounded-xl border border-navy/15 bg-white px-4 py-3 text-[14px] font-bold text-navy/45"
-    >
-      <Receipt className="h-4 w-4" />
-      Daily Summary Report
-      <span className="ml-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] uppercase tracking-wide text-amber-900">Soon</span>
-    </button>
-  );
-}
-
 // ── Pending guest check-ins (live: today's confirmed arrivals) ───────────────
 function initials(name: string) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "?";
@@ -286,20 +251,5 @@ export function PendingCheckIns({ rows }: { rows: PendingCheckIn[] }) {
         </div>
       )}
     </section>
-  );
-}
-
-// ── Primary CTA: quick booking ───────────────────────────────────────────────
-// TODO: points at the public booking form for now; swap to an admin-side
-// booking-creation flow once that exists (no admin create UI yet).
-export function QuickBookingButton() {
-  return (
-    <Link
-      href="/book"
-      className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-teal px-5 text-[15px] font-bold text-white transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
-    >
-      <Plus className="h-5 w-5" />
-      Quick Booking
-    </Link>
   );
 }

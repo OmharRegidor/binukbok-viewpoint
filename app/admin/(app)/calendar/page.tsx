@@ -3,10 +3,8 @@ import { manilaToday } from "@/lib/db/dates";
 import { Topbar } from "../../_components/Topbar";
 import {
   CalendarGrid,
-  DailySummaryButton,
   MonthNav,
   PendingCheckIns,
-  QuickBookingButton,
   QuickResortView,
   RoomStatusCard,
   TodayActivity,
@@ -48,14 +46,12 @@ export default async function CalendarPage({
             <PendingCheckIns rows={pending} />
           </div>
 
-          {/* Sidebar — monitoring data first, actions lower (admins open this to scan,
-              not to book). */}
+          {/* Sidebar — live monitoring data: today's activity, room status, and
+              a resort snapshot. */}
           <aside className="space-y-6">
             <TodayActivity stats={stats} />
             <RoomStatusCard stats={stats} />
             <QuickResortView occupancyPct={stats.occupancyPct} />
-            <QuickBookingButton />
-            <DailySummaryButton />
           </aside>
         </div>
       </div>
