@@ -79,7 +79,7 @@ function SpeedDialFab({
         <button
           type="button"
           onClick={onPickScan}
-          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-lg ring-1 ring-navy/10 transition hover:bg-navy/5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-xl ring-1 ring-navy/15 transition hover:bg-cream hover:text-teal-deep hover:shadow-2xl hover:ring-teal/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
         >
           <ScanLine className="h-4 w-4" />
           Scan check-in
@@ -87,7 +87,7 @@ function SpeedDialFab({
         <button
           type="button"
           onClick={onPickAi}
-          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-lg ring-1 ring-navy/10 transition hover:bg-navy/5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-xl ring-1 ring-navy/15 transition hover:bg-cream hover:text-teal-deep hover:shadow-2xl hover:ring-teal/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
         >
           <Sparkles className="h-4 w-4" />
           Ask AI
