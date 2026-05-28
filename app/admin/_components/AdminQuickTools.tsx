@@ -101,7 +101,7 @@ function SpeedDialFab({
         aria-expanded={open}
         aria-controls="admin-quick-tools-actions"
         aria-label={open ? "Close quick tools" : "Open quick tools"}
-        className={`pointer-events-auto grid h-14 w-14 place-items-center rounded-full bg-teal text-white shadow-xl transition hover:bg-teal-bright focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40 ${
+        className={`pointer-events-auto grid h-14 w-14 place-items-center rounded-full bg-navy text-white shadow-2xl ring-2 ring-white transition hover:bg-navy/90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40 ${
           open ? "rotate-45" : ""
         }`}
       >
