@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
-import { RoomImageCard } from "@/components/RoomImageCard";
 import { rooms } from "@/lib/data";
 import { Users, Check, ArrowRight, Star } from "@/components/Icons";
 
@@ -40,27 +40,33 @@ export default function AccommodationsPage() {
           {rooms.map((room, i) => {
             const imageFirst = i % 2 === 0;
             const Visual = (
-              <div className="relative">
-                <span className="absolute -top-3 left-4 z-10 rounded-full bg-white px-3 py-1 text-[10px] font-semibold text-navy shadow ring-1 ring-black/5">
+              <div className="relative mx-auto aspect-[4/3] w-full max-w-[512px] overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5">
+                <Image
+                  src={`/images/${room.slug}.png`}
+                  alt={`${room.name} at BiNuKBoK VieW PoiNT ReSoRT`}
+                  fill
+                  sizes="(max-width: 512px) 100vw, 512px"
+                  className="object-cover"
+                />
+                <span className="absolute left-4 top-4 z-10 rounded-full bg-white px-3 py-1 text-xs font-semibold text-navy shadow ring-1 ring-black/5">
                   {room.badge}
                 </span>
-                <RoomImageCard room={room} />
               </div>
             );
             const Text = (
               <div>
                 <p className="text-sm font-semibold text-teal">{room.tagline}</p>
-                <h2 className="mt-1 text-3xl font-extrabold text-navy">{room.name}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-navy/70">
+                <h2 className="mb-4 mt-1 text-3xl font-bold text-navy md:text-4xl">{room.name}</h2>
+                <p className="mb-6 text-lg leading-relaxed text-gray-600">
                   {room.description}
                 </p>
-                <p className="mt-4 flex items-center gap-2 text-sm font-medium text-navy/80">
-                  <Users className="h-4 w-4 text-teal" />
+                <p className="flex items-center gap-2 text-base text-gray-700">
+                  <Users className="h-5 w-5 text-teal" />
                   {room.guests}
                 </p>
-                <ul className="mt-4 grid grid-cols-2 gap-y-2.5 gap-x-4">
+                <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3">
                   {room.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-navy/70">
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
                       <Check className="h-4 w-4 text-teal" />
                       {f}
                     </li>
@@ -68,7 +74,7 @@ export default function AccommodationsPage() {
                 </ul>
                 <Link
                   href="/book"
-                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-coral-dark"
+                  className="mt-6 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-coral px-8 text-sm font-medium text-white transition-colors hover:bg-coral-dark"
                 >
                   Book This Room <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -78,7 +84,7 @@ export default function AccommodationsPage() {
             return (
               <div
                 key={room.slug}
-                className="grid items-center gap-10 lg:grid-cols-2"
+                className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16"
               >
                 {imageFirst ? (
                   <>
