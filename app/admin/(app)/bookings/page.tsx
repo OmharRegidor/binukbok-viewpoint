@@ -82,7 +82,7 @@ export default async function BookingsPage({
   const pageHref = (p: number) => {
     const u = new URLSearchParams(baseParams);
     u.set("page", String(p));
-    return `/admin/bookings?${u.toString()}`;
+    return `/bookings?${u.toString()}`;
   };
 
   // Out-of-range page (e.g. ?page=99) → bounce to the last real page.

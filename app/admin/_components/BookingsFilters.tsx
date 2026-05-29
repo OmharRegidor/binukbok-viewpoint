@@ -24,8 +24,9 @@ const RANGE_OPTIONS = [
 const field =
   "min-h-[48px] rounded-xl border-2 border-navy/15 bg-white px-3 text-[15px] text-navy outline-none focus:border-teal focus:ring-2 focus:ring-teal/20";
 
-// Filters navigate to /admin/bookings with URL params; the server page reads them
+// Filters navigate to the bookings page with URL params; the server page reads them
 // and calls listBookings(). Applying resets to page 1 (page param omitted).
+// Clean path (/bookings) — middleware rewrites onto /admin/bookings for rendering.
 export function BookingsFilters() {
   const router = useRouter();
   const params = useSearchParams();
@@ -41,7 +42,7 @@ export function BookingsFilters() {
     if (status !== "ALL") sp.set("status", status);
     if (range !== "all") sp.set("range", range);
     const qs = sp.toString();
-    startTransition(() => router.push(`/admin/bookings${qs ? `?${qs}` : ""}`));
+    startTransition(() => router.push(`/bookings${qs ? `?${qs}` : ""}`));
   }
 
   return (

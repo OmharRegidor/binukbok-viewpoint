@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowRight, Bed, ChevronRight, LogIn } from "@/components/Icons";
 import type { CalendarDay, CalendarMonth, PendingCheckIn, TodayStats } from "@/lib/db/calendar";
 
-const BASE = "/admin/calendar";
+const BASE = "/calendar";
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const cellDateFmt = new Intl.DateTimeFormat("en-PH", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 const checkInFmt = new Intl.DateTimeFormat("en-PH", { month: "short", day: "numeric", timeZone: "UTC" });
@@ -63,15 +63,22 @@ function DayCell({ d }: { d: CalendarDay }) {
   const full = d.totalUnits > 0 && d.freeUnits === 0;
   const partial = !full && d.bookedUnits > 0;
 
-  const pill = full
-    ? { label: "Full", cls: "bg-coral/15 text-coral-dark" }
-    : partial
-      ? { label: `${d.freeUnits} free`, cls: "bg-amber-100 text-amber-900" }
-      : { label: "Available", cls: "bg-teal/15 text-teal-deep" };
+  // One minimalist pill per day. Arrivals take priority (the day's actionable
+  // signal) and replace the occupancy label on arrival days; otherwise show
+  // occupancy. Per-day departures + the full breakdown stay in the aria-label
+  // and the Today's Activity sidebar.
+  const pill =
+    d.arrivals > 0
+      ? { label: `${d.arrivals} ${d.arrivals === 1 ? "Arrival" : "Arrivals"}`, cls: "bg-teal/15 text-teal-deep", icon: true }
+      : full
+        ? { label: "Full", cls: "bg-coral/15 text-coral-dark", icon: false }
+        : partial
+          ? { label: `Booked (${d.bookedUnits})`, cls: "bg-amber-100 text-amber-900", icon: false }
+          : { label: "Available", cls: "bg-teal/15 text-teal-deep", icon: false };
 
   const parts = [`${d.freeUnits} of ${d.totalUnits} rooms free`];
-  if (d.arrivals) parts.push(`${d.arrivals} arrival${d.arrivals === 1 ? "" : "s"}`);
-  if (d.departures) parts.push(`${d.departures} departure${d.departures === 1 ? "" : "s"}`);
+  if (d.arrivals) parts.push(`${d.arrivals} check-in${d.arrivals === 1 ? "" : "s"}`);
+  if (d.departures) parts.push(`${d.departures} check-out${d.departures === 1 ? "" : "s"}`);
 
   return (
     <div
@@ -89,24 +96,10 @@ function DayCell({ d }: { d: CalendarDay }) {
         {d.day}
       </span>
 
-      <span className={`rounded-md px-1.5 py-0.5 text-center text-[11px] font-bold ${pill.cls}`}>{pill.label}</span>
-
-      {(d.arrivals > 0 || d.departures > 0) && (
-        <div className="mt-auto flex flex-wrap gap-1 text-[10px] font-bold">
-          {d.arrivals > 0 && (
-            <span className="inline-flex items-center gap-0.5 rounded bg-teal/15 px-1 py-0.5 text-teal-deep">
-              <LogIn className="h-3 w-3" />
-              {d.arrivals} in
-            </span>
-          )}
-          {d.departures > 0 && (
-            <span className="inline-flex items-center gap-0.5 rounded bg-coral/15 px-1 py-0.5 text-coral-dark">
-              <ArrowRight className="h-3 w-3" />
-              {d.departures} out
-            </span>
-          )}
-        </div>
-      )}
+      <span className={`flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[11px] font-bold ${pill.cls}`}>
+        {pill.icon && <LogIn className="h-3 w-3 shrink-0" />}
+        {pill.label}
+      </span>
     </div>
   );
 }
@@ -216,7 +209,7 @@ export function PendingCheckIns({ rows }: { rows: PendingCheckIn[] }) {
         <h2 className="text-xl font-bold text-navy">
           Pending Guest Check-ins{rows.length > 0 && <span className="text-navy/50"> ({rows.length})</span>}
         </h2>
-        <Link href="/admin/bookings?range=upcoming" className="text-[14px] font-bold text-teal-deep transition hover:text-teal">
+        <Link href="/bookings?range=upcoming" className="text-[14px] font-bold text-teal-deep transition hover:text-teal">
           View all →
         </Link>
       </div>
@@ -241,7 +234,7 @@ export function PendingCheckIns({ rows }: { rows: PendingCheckIn[] }) {
                 </span>
               </div>
               <Link
-                href={`/admin/bookings?q=${encodeURIComponent(b.confirmationCode)}`}
+                href={`/bookings?q=${encodeURIComponent(b.confirmationCode)}`}
                 className="inline-flex min-h-[44px] w-full items-center justify-center rounded-xl bg-navy px-4 text-[14px] font-bold text-white transition hover:bg-navy-light focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/30 sm:w-auto"
               >
                 Check in

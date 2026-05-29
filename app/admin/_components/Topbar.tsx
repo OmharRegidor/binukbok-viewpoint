@@ -28,7 +28,7 @@ export function Topbar({ title }: { title: string }) {
           </span>
 
           <Link
-            href="/admin/bookings"
+            href="/bookings"
             aria-label="Search bookings"
             className="grid h-11 w-11 place-items-center rounded-full text-navy/70 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
           >

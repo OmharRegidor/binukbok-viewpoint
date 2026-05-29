@@ -195,7 +195,7 @@ export function ArrivalsTable({ rows }: { rows: ArrivalRow[] }) {
     <section className="rounded-2xl bg-white p-6 ring-1 ring-navy/5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xl font-bold text-navy">Recent Arrivals</h2>
-        <Link href="/admin/bookings" className="text-[14px] font-bold text-teal-deep transition hover:text-teal">
+        <Link href="/bookings" className="text-[14px] font-bold text-teal-deep transition hover:text-teal">
           View all bookings →
         </Link>
       </div>
@@ -234,7 +234,7 @@ export function ArrivalsTable({ rows }: { rows: ArrivalRow[] }) {
                   </td>
                   <td className="px-3 py-4 text-right">
                     <Link
-                      href={`/admin/bookings?q=${encodeURIComponent(r.code)}`}
+                      href={`/bookings?q=${encodeURIComponent(r.code)}`}
                       className="text-[14px] font-bold text-teal-deep transition hover:text-teal"
                     >
                       Details

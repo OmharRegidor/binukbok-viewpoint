@@ -9,12 +9,16 @@ export type NavItem = {
 };
 
 // Single source of truth for admin navigation (used by Sidebar + mobile Topbar nav).
+// hrefs are CLEAN subdomain paths (no /admin) so navigation shows /calendar, not
+// /admin/calendar. Middleware rewrites these onto the real /admin/* routes for
+// rendering (no redirect, no extra round-trip). `norm` already matches the clean
+// path; activeNorm() also tolerates a /admin prefix for localhost dev access.
 export const ADMIN_NAV: NavItem[] = [
-  { href: "/admin", norm: "/", label: "Overview", Icon: LayoutGrid },
-  { href: "/admin/bookings", norm: "/bookings", label: "Bookings", Icon: ClipboardList },
-  { href: "/admin/calendar", norm: "/calendar", label: "Calendar", Icon: Calendar },
-  { href: "/admin/resort-config", norm: "/resort-config", label: "Resort Config", Icon: Settings },
-  { href: "/admin/account", norm: "/account", label: "Account", Icon: Users },
+  { href: "/", norm: "/", label: "Overview", Icon: LayoutGrid },
+  { href: "/bookings", norm: "/bookings", label: "Bookings", Icon: ClipboardList },
+  { href: "/calendar", norm: "/calendar", label: "Calendar", Icon: Calendar },
+  { href: "/resort-config", norm: "/resort-config", label: "Resort Config", Icon: Settings },
+  { href: "/account", norm: "/account", label: "Account", Icon: Users },
 ];
 
 // Normalize a pathname so active state works on BOTH the admin subdomain
