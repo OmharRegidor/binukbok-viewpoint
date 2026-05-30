@@ -71,7 +71,7 @@ export default function DivingPage() {
 
       {/* diving packages */}
       <section className="bg-cream py-20">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center">
             <span className="inline-block rounded-full bg-coral/10 px-3 py-1 text-xs font-semibold text-coral">
               Our Programs
@@ -84,7 +84,7 @@ export default function DivingPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
+          <div className="mt-12 grid gap-8 md:grid-cols-2">
             {divePackages.map((pkg) => (
               <div
                 key={pkg.name}
