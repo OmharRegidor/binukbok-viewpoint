@@ -367,3 +367,36 @@ export function RotateCcw(props: IconProps) {
     </svg>
   );
 }
+
+// Sun — beachfront / outdoor amenity.
+export function Sun(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  );
+}
+
+// Bathtub — shared bathroom amenity.
+export function Bath(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" />
+      <line x1="10" x2="8" y1="5" y2="7" />
+      <line x1="2" x2="22" y1="12" y2="12" />
+      <line x1="7" x2="7" y1="19" y2="21" />
+      <line x1="17" x2="17" y1="19" y2="21" />
+    </svg>
+  );
+}
+
+// Fan — ventilation / electric fan amenity.
+export function Fan(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z" />
+      <path d="M12 12v.01" />
+    </svg>
+  );
+}

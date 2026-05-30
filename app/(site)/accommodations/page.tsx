@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { rooms } from "@/lib/data";
-import { Users, Check, ArrowRight, Star } from "@/components/Icons";
+import { Users, Check, ArrowRight, Sun, Bath, Fan } from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "Accommodations | BiNuKBoK VieW PoiNT ReSoRT",
@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 };
 
 const amenities = [
-  { title: "Beachfront Access", text: "Private beach area" },
-  { title: "Common Area", text: "Shared lounge space" },
+  { title: "Beachfront Access", text: "Private beach area", Icon: Sun },
+  { title: "Common Area", text: "Shared lounge space", Icon: Users },
+  { title: "Shared Bathroom", text: "Clean facilities", Icon: Bath },
+  { title: "Ventilation", text: "Electric fans provided", Icon: Fan },
 ];
 
 export default function AccommodationsPage() {
@@ -105,22 +107,22 @@ export default function AccommodationsPage() {
 
       {/* amenities */}
       <section className="bg-cream py-16">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-3xl font-extrabold text-navy">Resort Amenities</h2>
-          <p className="mt-2 text-sm text-navy/60">
+        <div className="mx-auto max-w-6xl px-6 text-center lg:px-8">
+          <h2 className="text-3xl font-extrabold text-navy sm:text-4xl">Resort Amenities</h2>
+          <p className="mt-2 text-base text-navy/60">
             All guests enjoy access to our resort facilities
           </p>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {amenities.map((a) => (
               <div
                 key={a.title}
-                className="rounded-xl bg-white/70 p-8 text-center shadow-sm"
+                className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-black/5"
               >
-                <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 text-teal">
-                  <Star className="h-6 w-6" />
+                <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-teal/10 text-teal-deep">
+                  <a.Icon className="h-6 w-6" />
                 </span>
-                <p className="font-semibold text-navy">{a.title}</p>
-                <p className="mt-1 text-xs text-navy/60">{a.text}</p>
+                <p className="font-bold text-navy">{a.title}</p>
+                <p className="mt-1 text-sm text-navy/55">{a.text}</p>
               </div>
             ))}
           </div>
