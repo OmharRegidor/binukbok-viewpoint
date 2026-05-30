@@ -135,7 +135,7 @@ export function BookingForm({
           Add Diving Experience
         </label>
         {diving && (
-          <div className="mt-4 grid gap-5 rounded-xl bg-cream/70 p-5 sm:grid-cols-2">
+          <div className="mt-4 grid gap-5 rounded-xl bg-cream/70 p-5 sm:grid-cols-[2fr_1fr]">
             <Field label="Diving Course" required>
               <select value={divePackageId} onChange={(e) => setDivePackageId(e.target.value)} className={input}>
                 <option value="">Select a course</option>
