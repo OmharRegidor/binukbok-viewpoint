@@ -9,10 +9,12 @@ import { Users, Home, Waves, ArrowRight, Phone } from "./Icons";
 export function BookingForm({
   roomTypes,
   divePackages,
+  initialRoomTypeSlug,
   initialDivePackageId,
 }: {
   roomTypes: RoomTypeOption[];
   divePackages: DiveOption[];
+  initialRoomTypeSlug?: string;
   initialDivePackageId?: string;
 }) {
   const router = useRouter();
@@ -21,7 +23,7 @@ export function BookingForm({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [roomSlug, setRoomSlug] = useState("");
+  const [roomSlug, setRoomSlug] = useState(initialRoomTypeSlug ?? "");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);

@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 export default async function BookPage({
   searchParams,
 }: {
-  searchParams: Promise<{ dive?: string }>;
+  searchParams: Promise<{ dive?: string; room?: string }>;
 }) {
-  const [{ dive }, roomTypes, divePackages] = await Promise.all([
+  const [{ dive, room }, roomTypes, divePackages] = await Promise.all([
     searchParams,
     getRoomTypes(),
     getDivePackages(),
@@ -20,6 +20,9 @@ export default async function BookPage({
 
   // "/book?dive=open-water-certification" pre-selects that course.
   const initialDivePackageId = dive ? divePackages.find((d) => d.slug === dive)?.id : undefined;
+  // "/book?room=couple-room" pre-selects that room. Validate the slug exists
+  // so a stale/typo link doesn't put the form into a bad state.
+  const initialRoomTypeSlug = room && roomTypes.some((r) => r.slug === room) ? room : undefined;
 
   return (
     <>
@@ -40,6 +43,7 @@ export default async function BookPage({
           <BookingForm
             roomTypes={roomTypes}
             divePackages={divePackages}
+            initialRoomTypeSlug={initialRoomTypeSlug}
             initialDivePackageId={initialDivePackageId}
           />
         </div>

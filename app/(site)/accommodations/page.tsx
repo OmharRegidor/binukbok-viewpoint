@@ -75,7 +75,7 @@ export default function AccommodationsPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/book"
+                  href={`/book?room=${room.slug}`}
                   className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-coral px-8 text-sm font-medium text-white transition-colors hover:bg-coral-dark"
                 >
                   Book This Room <ArrowRight className="h-4 w-4" />
