@@ -56,7 +56,7 @@ export function Topbar({ title }: { title: string }) {
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
-              className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[14px] font-semibold transition ${
+              className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-3 text-[14px] font-semibold transition ${
                 active ? "bg-teal text-white" : "bg-white text-navy/70 ring-1 ring-navy/10"
               }`}
             >

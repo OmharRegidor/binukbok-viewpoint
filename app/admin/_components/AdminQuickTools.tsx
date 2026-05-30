@@ -79,7 +79,7 @@ function SpeedDialFab({
         <button
           type="button"
           onClick={onPickScan}
-          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-xl ring-1 ring-navy/15 transition hover:bg-cream hover:text-teal-deep hover:shadow-2xl hover:ring-teal/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-[14px] font-bold text-navy shadow-xl ring-1 ring-navy/15 transition hover:bg-cream hover:text-teal-deep hover:shadow-2xl hover:ring-teal/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
         >
           <ScanLine className="h-4 w-4" />
           Scan check-in
@@ -87,7 +87,7 @@ function SpeedDialFab({
         <button
           type="button"
           onClick={onPickAi}
-          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[14px] font-bold text-navy shadow-xl ring-1 ring-navy/15 transition hover:bg-cream hover:text-teal-deep hover:shadow-2xl hover:ring-teal/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-[14px] font-bold text-navy shadow-xl ring-1 ring-navy/15 transition hover:bg-cream hover:text-teal-deep hover:shadow-2xl hover:ring-teal/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/40"
         >
           <Sparkles className="h-4 w-4" />
           Ask AI
@@ -141,7 +141,7 @@ function AiPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
             onClick={() => clearRef.current()}
             aria-label="Clear conversation"
             title="Clear conversation"
-            className="grid h-9 w-9 place-items-center rounded-full text-navy/60 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
+            className="grid h-11 w-11 place-items-center rounded-full text-navy/60 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
           >
             <RotateCcw className="h-4 w-4" />
           </button>
@@ -149,7 +149,7 @@ function AiPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
             type="button"
             onClick={onClose}
             aria-label="Close panel"
-            className="grid h-9 w-9 place-items-center rounded-full text-navy/60 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
+            className="grid h-11 w-11 place-items-center rounded-full text-navy/60 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
           >
             <Close className="h-5 w-5" />
           </button>
@@ -185,7 +185,7 @@ function ScanModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             type="button"
             onClick={onClose}
             aria-label="Close scanner"
-            className="grid h-9 w-9 place-items-center rounded-full text-navy/60 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
+            className="grid h-11 w-11 place-items-center rounded-full text-navy/60 transition hover:bg-navy/5 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
           >
             <Close className="h-5 w-5" />
           </button>

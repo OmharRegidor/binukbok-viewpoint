@@ -143,7 +143,7 @@ export default function HomePage() {
               . Perfect for adventurers of all skill levels, from first-time divers to
               those seeking advanced certifications.
             </p>
-            <div className="mb-8 grid grid-cols-2 gap-4">
+            <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {featuredPoints.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="flex items-start gap-3">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal/10 text-teal-deep">
@@ -273,7 +273,7 @@ export default function HomePage() {
           <div className="mt-14 grid max-w-2xl gap-6 mx-auto grid-cols-3 text-center">
             {stats.map((s) => (
               <div key={s.label}>
-                <p className="text-3xl font-bold text-[#4FD1C5] md:text-4xl">{s.value}</p>
+                <p className="text-2xl font-bold text-[#4FD1C5] sm:text-3xl md:text-4xl">{s.value}</p>
                 <p className="mt-1 text-sm text-white/70">{s.label}</p>
               </div>
             ))}

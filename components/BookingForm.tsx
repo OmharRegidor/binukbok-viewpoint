@@ -76,7 +76,7 @@ export function BookingForm({
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
-      <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-8 shadow-lg">
+      <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-5 shadow-lg sm:p-8">
         <h2 className="text-2xl font-extrabold text-navy">Reservation Details</h2>
 
         {errorMsg && (
@@ -129,8 +129,8 @@ export function BookingForm({
         {selectedRoom && <p className="mt-2 text-xs text-navy/50">This room holds up to {selectedRoom.maxGuests} guests.</p>}
 
         {/* diving add-on */}
-        <label className="mt-6 flex cursor-pointer items-center gap-3 text-sm font-medium text-navy">
-          <input type="checkbox" checked={diving} onChange={(e) => setDiving(e.target.checked)} className="h-4 w-4 rounded border-navy/30 accent-teal" />
+        <label className="mt-6 flex min-h-[44px] cursor-pointer items-center gap-3 py-1 text-sm font-medium text-navy">
+          <input type="checkbox" checked={diving} onChange={(e) => setDiving(e.target.checked)} className="h-5 w-5 rounded border-navy/30 accent-teal" />
           <Waves className="h-5 w-5 text-teal" />
           Add Diving Experience
         </label>
