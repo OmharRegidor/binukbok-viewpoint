@@ -36,7 +36,7 @@ export default async function BookPage({
       </section>
 
       <section className="bg-cream py-16">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-6 lg:px-8">
           <BookingForm
             roomTypes={roomTypes}
             divePackages={divePackages}
