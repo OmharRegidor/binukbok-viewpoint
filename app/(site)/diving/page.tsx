@@ -88,7 +88,7 @@ export default function DivingPage() {
             {divePackages.map((pkg) => (
               <div
                 key={pkg.name}
-                className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ${
+                className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-2xl ${
                   pkg.popular ? "ring-2 ring-coral" : "ring-1 ring-black/5"
                 }`}
               >
