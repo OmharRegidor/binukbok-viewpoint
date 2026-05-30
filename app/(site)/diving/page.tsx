@@ -122,7 +122,7 @@ export default function DivingPage() {
                     ))}
                   </ul>
                   <Link
-                    href="/book"
+                    href={`/book?dive=${pkg.slug}`}
                     className={`mt-6 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white transition-colors ${
                       pkg.popular
                         ? "bg-coral hover:bg-coral-dark"

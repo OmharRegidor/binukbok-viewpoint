@@ -59,6 +59,7 @@ export const rooms: Room[] = [
 ];
 
 export type DivePackage = {
+  slug: string; // matches the DB seed slug — used by /book?dive=<slug> deep links
   name: string;
   tagline: string;
   price: number;
@@ -70,6 +71,7 @@ export type DivePackage = {
 
 export const divePackages: DivePackage[] = [
   {
+    slug: "discovery-dive",
     name: "Discovery Dive",
     tagline: "Try Scuba Experience",
     price: 3500,
@@ -86,6 +88,7 @@ export const divePackages: DivePackage[] = [
     popular: true,
   },
   {
+    slug: "open-water-certification",
     name: "Open Water Certification",
     tagline: "PADI Open Water Diver",
     price: 18000,
@@ -101,6 +104,7 @@ export const divePackages: DivePackage[] = [
     ],
   },
   {
+    slug: "freediving-course",
     name: "Freediving Course",
     tagline: "Breath-Hold Diving",
     price: 8000,
@@ -116,6 +120,7 @@ export const divePackages: DivePackage[] = [
     ],
   },
   {
+    slug: "fun-dive",
     name: "Fun Dive",
     tagline: "For Certified Divers",
     price: 2500,
