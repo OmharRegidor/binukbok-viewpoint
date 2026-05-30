@@ -42,7 +42,7 @@ export default function AccommodationsPage() {
           {rooms.map((room, i) => {
             const imageFirst = i % 2 === 0;
             const Visual = (
-              <div className="relative mx-auto aspect-[4/3] w-full max-w-[512px] overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5">
+              <div className="relative mx-auto aspect-[4/3] w-full max-w-[512px] overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5 transition duration-200 hover:-translate-y-1 hover:shadow-2xl">
                 <Image
                   src={`/images/${room.slug}.png`}
                   alt={`${room.name} at BiNuKBoK VieW PoiNT ReSoRT`}
@@ -116,7 +116,7 @@ export default function AccommodationsPage() {
             {amenities.map((a) => (
               <div
                 key={a.title}
-                className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-black/5"
+                className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-black/5 transition duration-200 hover:-translate-y-1 hover:shadow-xl"
               >
                 <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-teal/10 text-teal-deep">
                   <a.Icon className="h-6 w-6" />
